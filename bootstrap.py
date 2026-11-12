@@ -13,7 +13,40 @@ def enforce_free_context():
         if os.environ.get('RUNNER_ENVIRONMENT')!='github-hosted':
             raise RuntimeError('Only the fixed standard GitHub-hosted workflow is supported.')
 
-def prepare():
+
+def fetch_pinned(item,destination):
+    destination.parent.mkdir(parents=True,exist_ok=True)
+    if destination.exists():
+        with destination.open('rb') as f:sha=hashlib.file_digest(f,'sha256').hexdigest()
+        if destination.stat().st_size==item['bytes'] and sha==item['sha256']:return
+        raise RuntimeError('Existing pinned file mismatch: '+destination.name)
+    with urllib.request.urlopen(item['url'],timeout=60) as response,destination.open('wb') as out:
+        copied=0
+        while chunk:=response.read(1024*1024):
+            copied+=len(chunk)
+            if copied>item['bytes']:raise RuntimeError('Oversized pinned download')
+            out.write(chunk)
+    with destination.open('rb') as f:sha=hashlib.file_digest(f,'sha256').hexdigest()
+    if destination.stat().st_size!=item['bytes'] or sha!=item['sha256']:raise RuntimeError('Pinned download checksum mismatch')
+
+def prepare_ct2(catalog):
+    target=root/'ct2-python';target.mkdir(exist_ok=True)
+    for item in catalog['pythonWheels']:
+        path=root/'wheel-downloads'/item['file'];fetch_pinned(item,path)
+        with zipfile.ZipFile(path) as archive:
+            for member in archive.infolist():
+                if member.is_dir():continue
+                destination=(target/member.filename).resolve()
+                if not destination.is_relative_to(target.resolve()):raise RuntimeError('Unsafe wheel path')
+                destination.parent.mkdir(parents=True,exist_ok=True)
+                with archive.open(member) as source,destination.open('wb') as out:shutil.copyfileobj(source,out)
+        path.unlink()
+    modeldir=root/'models/madlad7b'
+    for item in catalog['requiredFiles']:
+        if item['file']!='model.bin':fetch_pinned(item,modeldir/item['file'])
+    print('Prepared checksum-pinned PyPI CPU wheels and official-matched tokenizer; no large weights loaded.')
+
+def prepare(model=None):
     enforce_free_context()
     path=root/'runtime.zip'
     with urllib.request.urlopen(URL,timeout=60) as response,path.open('wb') as out:shutil.copyfileobj(response,out)
@@ -28,8 +61,13 @@ def prepare():
             destination.parent.mkdir(parents=True,exist_ok=True)
             with archive.open(item) as source,destination.open('wb') as out:shutil.copyfileobj(source,out)
     path.unlink()
+    catalog=json.loads((root/'models.json').read_text(encoding='utf-8')).get(model or os.environ.get('BENCH_MODEL',''),{})
+    if catalog.get('runtimeKind')=='ctranslate2':prepare_ct2(catalog)
     names=['benchmark.py','windows_support.py','models.json','cases.json','bootstrap.py','README.md','.github/workflows/test.yml','.gitignore']
     paths=[root/n for n in names]+[p for p in engine.rglob('*') if p.is_file()]
+    if catalog.get('runtimeKind')=='ctranslate2':
+        paths.extend(p for p in (root/'ct2-python').rglob('*') if p.is_file())
+        paths.extend(p for p in (root/'models/madlad7b').rglob('*') if p.is_file() and p.name!='model.bin')
     files={}
     for p in paths:
         with p.open('rb') as source:sha=hashlib.file_digest(source,'sha256').hexdigest()
@@ -47,5 +85,5 @@ def emit():
         print('BENCH_RESULT_END '+path.name,flush=True)
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--emit-results',action='store_true');args=parser.parse_args()
-    emit() if args.emit_results else prepare()
+    parser=argparse.ArgumentParser();parser.add_argument('--emit-results',action='store_true');parser.add_argument('--prepare-model');args=parser.parse_args()
+    emit() if args.emit_results else prepare(args.prepare_model)

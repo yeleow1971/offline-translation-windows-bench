@@ -5,3 +5,6 @@ __pycache__/
 integrity.json
 runtime.zip
 *.part
+
+ct2-python/
+wheel-downloads/

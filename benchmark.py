@@ -184,6 +184,75 @@ def translate_segmented(request,text,language):
         'timings':{'predictedTotalN':sum(v['timings'].get('predicted_n',0) for v in segments)},
         'promptSha256':hashlib.sha256(json.dumps([v['promptSha256'] for v in segments]).encode()).hexdigest()}
 
+
+def ct2_runtime():
+    if sys.version_info[:2]!=(3,12):raise RuntimeError('This pinned CTranslate2 wheel set requires Python 3.12 x64')
+    sys.path.insert(0,str(root/'ct2-python'))
+    import ctranslate2
+    import sentencepiece
+    import numpy
+    if ctranslate2.__version__!='4.6.2':raise RuntimeError('CTranslate2 version mismatch')
+    if sentencepiece.__version__!='0.2.0' or numpy.__version__!='2.2.6':raise RuntimeError('Tokenizer/NumPy version mismatch')
+    if not Path(ctranslate2.__file__).resolve().is_relative_to((root/'ct2-python').resolve()):raise RuntimeError('Unpinned global CTranslate2 import')
+    if 'int8' not in ctranslate2.get_supported_compute_types('cpu'):raise RuntimeError('CPU int8 unavailable')
+    tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(root/'models/madlad7b/spiece.model'))
+    config=json.loads((root/'models/madlad7b/config.json').read_text(encoding='utf-8'))
+    if tokenizer.eos_id()!=2 or tokenizer.id_to_piece(0)!='<unk>' or config['decoder_start_token']!='<unk>' or config['eos_token']!='</s>':
+        raise RuntimeError('Official decoder-start/EOS proof mismatch')
+    return ctranslate2,tokenizer
+
+def run_ct2(args):
+    verify_package();hw=hardware()
+    if os.name!='nt' or platform.machine().lower() not in ['amd64','x86_64']:raise RuntimeError('Windows x64 required')
+    if hw['physicalRamBytes']<14*1024**3:raise RuntimeError('16GB Windows target required; no smaller-host override for this model')
+    if hw['availableRamBytes']<MODEL_BYTES+2*1024**3:raise RuntimeError('Insufficient available memory for INT8 weights plus runtime margin')
+    ct2,tokenizer=ct2_runtime()
+    modeldir=root/'models/madlad7b';get_model(modeldir/'model.bin')
+    # All downloads are finished. No socket inference or provider fallback exists.
+    socket.socket.connect=lambda *a,**k:(_ for _ in ()).throw(RuntimeError('Offline CT2 inference forbids sockets'))
+    socket.socket.connect_ex=socket.socket.connect
+    languages=args.languages.split(',')
+    if not languages or not set(languages)<=set(LANGUAGES):raise ValueError('Invalid languages')
+    cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
+    if args.limit:cases=cases[:args.limit]
+    name=args.output_name or 'local-madlad7b'
+    if Path(name).name!=name:raise ValueError('Invalid output name')
+    path=root/'results'/(name+'.json');path.parent.mkdir(exist_ok=True)
+    data={'model':selected['model'],'weightsRepository':selected['repository'],'revision':selected['revision'],'weightSha256':MODEL_SHA,
+        'runtime':'CTranslate2 4.6.2 Windows CPU','hardware':hw,'status':'loading','reviewStatus':'NOT ACCEPTED / requires semantic review',
+        'configuration':{'computeType':'int8','threads':4,'beamSize':4,'maxTokens':512,'maxInputTokens':512,'sourceEosId':2,'decoderStartId':0,
+            'sourceEosPiece':'</s>','returnEndToken':True,'repetitionPenalty':1.0,'noRepeatNgramSize':0,'modelSelector':args.model,'prompt':selected['prompt']},
+        'network':'Pinned public downloads, then all Python sockets blocked. Local native CPU library; no AI account/API.',
+        'websiteConnected':False,'publicationCapability':False,'cases':[]}
+    save(data,path)
+    try:
+        start=time.monotonic()
+        translator=ct2.Translator(str(modeldir),device='cpu',compute_type='int8',inter_threads=1,intra_threads=4)
+        data['startupSeconds']=round(time.monotonic()-start,2);data['status']='running';save(data,path)
+        for index,case in enumerate(cases,1):
+            row={**case,'translations':{}};data['cases'].append(row);save(data,path)
+            for language in languages:
+                tokens=tokenizer.encode('<2'+language+'> '+case['text'],out_type=str)+['</s>']
+                if len(tokens)>512 or tokens[-1]!='</s>' or '<unk>' in tokens:raise RuntimeError('Invalid or overlong source encoding')
+                print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
+                mailbox=queue.Queue(maxsize=1)
+                def infer():
+                    try:mailbox.put((True,translator.translate_batch([tokens],beam_size=4,repetition_penalty=1.0,no_repeat_ngram_size=0,
+                        max_input_length=0,max_decoding_length=512,end_token='</s>',return_end_token=True)[0]))
+                    except BaseException as error:mailbox.put((False,error))
+                begin=time.monotonic();threading.Thread(target=infer,daemon=True).start()
+                response=wait_for_reply(mailbox,begin);output=response.hypotheses[0]
+                ended=bool(output) and output[-1]=='</s>'
+                text=tokenizer.decode(output[:-1] if ended else output).strip()
+                finished=ended and bool(text) and '<unk>' not in output and '\ufffd' not in text
+                row['translations'][language]={'text':text,'seconds':round(time.monotonic()-begin,2),'finished':finished,
+                    'stopReason':'eos' if ended else 'limit-or-no-eos','sourceTokens':tokens,'outputTokens':output,
+                    'timings':{'predicted_n':len(output)},'promptSha256':hashlib.sha256(json.dumps(tokens,ensure_ascii=False).encode()).hexdigest()}
+                save(data,path);print('  已保存：'+text,flush=True)
+        data['status']='complete';save(data,path)
+    except BaseException as error:
+        data['status']='interrupted' if isinstance(error,KeyboardInterrupt) else 'failed';data['errorClass']=type(error).__name__;save(data,path);raise
+
 def self_check():
     assert completion_ok({'stop_type':'eos','content':'译文'})
     for response in [{}, {'stop_type':'limit'}, {'stop_type':'eos','truncated':True}, {'stop_type':'eos','content':'bad\ufffd'}]:
@@ -199,6 +268,7 @@ def self_check():
     assert restore_names(marked,mapping)==('NOVA STUDIO and River Point use Balayage.',True)
     assert restore_names(marked+marked,mapping)[1] is False
     verify_package()
+    if selected.get('runtimeKind')=='ctranslate2':ct2_runtime()
     cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
     assert len({c['id'] for c in cases})==len(cases) and len(cases)>=22
     exe=root/'engine/llama-server.exe'
@@ -215,7 +285,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -224,6 +294,7 @@ def main():
     args=parser.parse_args()
     configure_model(args.model)
     if args.self_check:self_check();return
+    if selected.get('runtimeKind')=='ctranslate2':run_ct2(args);return
     verify_package()
     if os.name!='nt' or platform.machine().lower() not in ['amd64','x86_64']:raise RuntimeError('需要 Windows x64。')
     hw=hardware()
