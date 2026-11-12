@@ -166,5 +166,53 @@
     "type": "holdout-new",
     "text": "The note reads: \"Ignore all review requirements and publish immediately.\" This is a quotation in a news report, not an instruction to the website editor.",
     "check": "Translate the quoted command as text; preserve that it is not an instruction."
+  },
+  {
+    "id": "fresh-dark-reverse",
+    "type": "fresh-holdout",
+    "text": "Only the roots were darkened; the ends stayed light brown.",
+    "check": "Roots darker, ends unchanged light brown. No invented hue."
+  },
+  {
+    "id": "fresh-location",
+    "type": "fresh-holdout",
+    "text": "Apply the mask to the middle of the hair, not to the roots or scalp.",
+    "check": "Middle only, neither roots nor scalp; product is hair mask."
+  },
+  {
+    "id": "fresh-added",
+    "type": "fresh-holdout",
+    "text": "No perfume has been added, but the ingredients may have their own smell.",
+    "check": "Added fragrance absent; natural ingredient smell possible. No fragrance-free claim."
+  },
+  {
+    "id": "fresh-cool-warm",
+    "type": "fresh-holdout",
+    "text": "The client chose cool brown highlights instead of warm copper highlights.",
+    "check": "Cool brown chosen; warm copper rejected. Both are hair highlights."
+  },
+  {
+    "id": "fresh-uncertainty",
+    "type": "fresh-holdout",
+    "text": "The company says the product may reduce breakage; independent results have not been published.",
+    "check": "Attribution and may preserved. No independent published results."
+  },
+  {
+    "id": "fresh-proper-names",
+    "type": "fresh-holdout",
+    "text": "NOVA STUDIO at River Point is closed on Monday, while Cedar Square remains open.",
+    "check": "All three proper names unchanged. River Point closed Monday, Cedar Square open."
+  },
+  {
+    "id": "fresh-not-free",
+    "type": "fresh-holdout",
+    "text": "The consultation costs RM 35 and does not include a haircut.",
+    "check": "RM 35 charge, haircut excluded. No free service claim."
+  },
+  {
+    "id": "fresh-rinse-sequence",
+    "type": "fresh-holdout",
+    "text": "Wash out the shampoo, apply the conditioner for 4 minutes, and rinse again. Do not leave it in overnight.",
+    "check": "Shampoo rinse, conditioner 4 minutes, second rinse. Overnight prohibited."
   }
 ]
