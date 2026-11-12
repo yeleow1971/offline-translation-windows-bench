@@ -14,7 +14,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: manual-windows-model-qa
+  # Two bounded standard/free lanes: 12B and other candidates.
+  group: manual-windows-model-qa-${{ inputs.model == 'gemma12b' && 'large' || 'baseline' }}
   cancel-in-progress: false
 
 jobs:
