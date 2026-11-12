@@ -51,5 +51,20 @@
     "temperature": 0.0,
     "repeat_penalty": 1.0,
     "prompt": "Exact canonical TranslateGemma turn prompt verified in pinned 12B GGUF metadata; locales zh-Hans/ms/ta-MY, greedy decoding; no domain glossary"
+  },
+  "hymt7b-segment": {
+    "model": "tencent/Hy-MT2-7B",
+    "repository": "tencent/HY-MT2-7B-GGUF",
+    "revision": "ab8472660ac61fac25f1af43fac2599d52a8a775",
+    "file": "Hy-MT2-7B-Q4_K_M.gguf",
+    "bytes": 4624648896,
+    "sha256": "9f96256500f3fc1ab4d64336b58f52a949a95ad7516b0c229476eef782f9f77b",
+    "license": "Apache-2.0",
+    "quantizationSource": "official Tencent GGUF",
+    "top_p": 0.6,
+    "repeat_penalty": 1.05,
+    "prompt": "Conservative sentence segmentation; generic salon terminology; reversible protected proper names/technique markers; explicit native token IDs and EOS/marker checks; greedy decoding",
+    "temperature": 0.0,
+    "threads": 4
   }
 }

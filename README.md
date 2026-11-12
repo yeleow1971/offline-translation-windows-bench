@@ -6,7 +6,7 @@ This is a small, manually started software compatibility and translation regress
 
 - The workflow uses only the standard `windows-2022` GitHub-hosted runner. GitHub documents 4 CPU / 16GB RAM for standard public-repository Windows runners, with free public-repository compute.
 - A job-level public-repository condition is evaluated before allocation; private-repository runs are refused. The bootstrap adds a second public-runner check.
-- Manual dispatch only, one job at a time, 75-minute maximum. No schedule, pull-request execution, paid/larger/GPU runner, external cloud account, AI-provider API, subscription or purchase.
+- Manual dispatch only, at most two bounded standard/free lanes (12B / other candidates), 75-minute maximum per job. No schedule, pull-request execution, paid/larger/GPU runner, external cloud account, AI-provider API, subscription or purchase.
 - No model caching, artifact upload, package publishing or result commits. Model/runtime files live only on the temporary machine. Small synthetic test results are preserved in ordinary workflow logs, not artifact storage.
 - No secrets, customer records, website source, production endpoints or website credentials are included. The workflow token has only repository read permission and checkout credentials are not persisted. Model-child environment variables are restricted to a small OS allowlist and a random local API key.
 
@@ -26,7 +26,7 @@ The official llama.cpp b12282 Windows CPU archive is checksum-verified before ex
 
 Hy-MT2 uses its verified official 7B template, which differs from its 1.8B template. Qwen uses the embedded model chat template with server reasoning disabled. Raw text, actual hardware, configuration, completion status and timings are recorded. Incomplete answers and failed jobs are never marked semantically accepted.
 
-There are 28 original synthetic cases, up to 84 outputs per model. All brand/location names, news passages, times, quantities and product directions are invented testing data. Instructions inside source text are translated as text, never executed. No external news article text is republished.
+The initial snapshot contains 28 original synthetic cases; later profiles add fresh cases (currently 44, up to 132 language outputs). Each run records its source commit and case set. All brand/location names, news passages, times, quantities and product directions are invented testing data. Instructions inside source text are translated as text, never executed. No external news article text is republished.
 
 ## Interpretation and Windows offline delivery
 
@@ -58,3 +58,8 @@ License: **Gemma Terms of Use, not Apache-2.0**. Gemma is provided under and sub
 
 
 Input validity correction: the first 12B dispatch (43163506495) was stopped because the GGUF requests automatic BOS, which would duplicate the BOS already present in its canonical prompt string. Those partial outputs are configuration-invalid and are excluded from model-quality conclusions. The replacement explicitly tokenizes the canonical text with add_special=false, verifies exactly one initial BOS, and sends integer token IDs, which the native endpoint does not auto-prefix. The local official b12282 vocab-only tokenizer confirmed that Hy7B default/no-BOS sequences are identical, so its ongoing domain run is not affected. No large weights were loaded locally for this diagnostic.
+
+
+## Sentence and proper-name pipeline experiment
+
+The `hymt7b-segment` profile tests a justified pipeline improvement, not another claim about base-model ranking. It conservatively separates complete English sentences (with abbreviation/decimal guards), protects only the fictional brand/branch names and the named Balayage technique with reversible markers, translates each sentence with generic salon terminology, and restores a name only if every expected marker occurs exactly once. Raw model text, source segments, markers, EOS/truncation/timing/token evidence and final restored text are all retained. No arbitrary translation words are edited or repaired after inference. Marker failures remain incomplete, not accepted. Greedy decoding uses all four standard runner CPUs. Eight additional unseen contrast/quantity/location cases are added before running this profile. Its quality still requires manual semantic review in all three languages.

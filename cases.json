@@ -214,5 +214,53 @@
     "type": "fresh-holdout",
     "text": "Wash out the shampoo, apply the conditioner for 4 minutes, and rinse again. Do not leave it in overnight.",
     "check": "Shampoo rinse, conditioner 4 minutes, second rinse. Overnight prohibited."
+  },
+  {
+    "id": "unseen-ordinal",
+    "type": "fresh-pipeline-holdout",
+    "text": "The first technique darkens the tips; the second technique leaves the tips unchanged.",
+    "check": "Preserve both explicit ordinals and different outcomes; do not invent/remove first or second."
+  },
+  {
+    "id": "unseen-application",
+    "type": "fresh-pipeline-holdout",
+    "text": "Apply shampoo to the scalp, but apply conditioner only from the middle of the hair to the ends.",
+    "check": "Shampoo goes to scalp; conditioner goes only to lengths/ends. Do not avoid scalp for shampoo."
+  },
+  {
+    "id": "unseen-structure",
+    "type": "fresh-pipeline-holdout",
+    "text": "The treatment may make the hair look smoother; it does not restore the original structure of damaged hair.",
+    "check": "May improve appearance; not restoration of original structure."
+  },
+  {
+    "id": "unseen-date",
+    "type": "fresh-pipeline-holdout",
+    "text": "Cedar Square opens on 7 January at 09:45; River Point stays closed that morning.",
+    "check": "Names, January7/09:45, Cedar open and River closed all preserved."
+  },
+  {
+    "id": "unseen-ash",
+    "type": "fresh-pipeline-holdout",
+    "text": "The stylist added a cool ash shade without making the ends lighter.",
+    "check": "Cool ash is hair colour tone, not literal ash; ends not lighter."
+  },
+  {
+    "id": "unseen-capacity",
+    "type": "fresh-pipeline-holdout",
+    "text": "The bottle contains 200 ml. The refill pouch contains 400 ml, not 250 ml.",
+    "check": "Correct containers and 200/400/not250 quantities across two sentences."
+  },
+  {
+    "id": "unseen-neutral-report",
+    "type": "fresh-pipeline-holdout",
+    "text": "The report compares the two techniques without recommending either one.",
+    "check": "Neither technique recommended, no preference added."
+  },
+  {
+    "id": "unseen-rinse-leave",
+    "type": "fresh-pipeline-holdout",
+    "text": "Do not use a rinse-out conditioner as a leave-in treatment.",
+    "check": "Both rinse-out and leave-in concepts plus prohibition must survive."
   }
 ]
