@@ -47,6 +47,9 @@ def get_model(path):
         print('正在核对本地模型 SHA256……',flush=True)
         if path.stat().st_size==MODEL_BYTES and digest(path)==MODEL_SHA:return
         raise RuntimeError('已有模型不符合固定版本，请保留它并换一个空目录重试。')
+    if os.environ.get('GITHUB_ACTIONS')=='true':
+        download_ranges(MODEL_URL,path,MODEL_BYTES,MODEL_SHA)
+        return
     path.parent.mkdir(parents=True,exist_ok=True)
     part=path.with_suffix('.gguf.part')
     have=part.stat().st_size if part.exists() else 0
