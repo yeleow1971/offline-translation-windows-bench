@@ -122,11 +122,20 @@ def round2_prompt(text,language,kind):
     raise ValueError('Unknown research prompt kind')
 
 
+
+def target_script_grammar(language):
+    # Character constraints cannot establish fidelity or correct terminology.
+    common=r"\x09\x0A\x0D\x20-\x7E\u00A0-\u024F\u0300-\u036F\u2000-\u206F\u20A0-\u20CF\u3000-\u303F\uFF01-\uFF60"
+    native={'zh':r'\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF','ms':'','ta':r'\u0B80-\u0BFF'}[language]
+    return 'root ::= ['+common+native+']+\n'
+
+
 def translate_round2(request,text,language):
     raw=round2_prompt(text,language,selected['promptKind'])
     tokens=native_prompt_tokens(request,raw,selected['firstTokenId'])
     payload={'prompt':tokens,'temperature':selected['temperature'],'top_p':selected['top_p'],
         'top_k':selected.get('top_k',20),'min_p':0,'repeat_penalty':1.0,'n_predict':768,'stream':False,'seed':0}
+    if selected.get('scriptConstraint'):payload['grammar']=target_script_grammar(language)
     begin=time.monotonic();mailbox=queue.Queue(maxsize=1)
     def infer():
         try:mailbox.put((True,request('/completion',payload)))
@@ -452,7 +461,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -498,7 +507,7 @@ def main():
     path=result_dir/(name+'.json')
     data={'model':selected['model'],'weightsRepository':selected['repository'],'revision':selected['revision'],'weightSha256':MODEL_SHA,
           'runtime':'official llama.cpp b12282 Windows CPU','hardware':hw,'status':'starting','reviewStatus':'NOT ACCEPTED / requires semantic review',
-          'configuration':{'loadMode':'none','repack':False,'context':2048,'threads':selected.get('threads',2),'temperature':selected.get('temperature',.7),'top_p':selected['top_p'],'top_k':20,'repeat_penalty':selected['repeat_penalty'],'seed':0,'maxTokens':768,'prompt':selected['prompt'],'modelSelector':args.model},
+          'configuration':{'scriptConstraint':selected.get('scriptConstraint',False),'loadMode':'none','repack':False,'context':2048,'threads':selected.get('threads',2),'temperature':selected.get('temperature',.7),'top_p':selected['top_p'],'top_k':20,'repeat_penalty':selected['repeat_penalty'],'seed':0,'maxTokens':768,'prompt':selected['prompt'],'modelSelector':args.model},
           'network':'Downloaded public weights once, then Python external sockets blocked; independent localhost model server. No personal AI or paid inference API.',
           'websiteConnected':False,'publicationCapability':False,'cases':[]}
     save(data,path)

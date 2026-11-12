@@ -343,5 +343,23 @@
       }
     ],
     "prompt": "Direct English-to-Tamil SentencePiece input, no chat prompt/glossary/source rewrite/output editing. Official MarianConverter float32, exact vocabulary order, native zero-start embedding and automatic source EOS0, beam4, return EOS; semantic review pending."
+  },
+  "gemma412b-script": {
+    "model": "google/gemma-4-12B-it",
+    "repository": "google/gemma-4-12B-it-qat-q4_0-gguf",
+    "revision": "29d097773436b69ff9feafd636ab4cf873786537",
+    "file": "gemma-4-12b-it-qat-q4_0.gguf",
+    "bytes": 6975879296,
+    "sha256": "93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b",
+    "license": "apache-2.0",
+    "quantizationSource": "official author GGUF",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0,
+    "repeat_penalty": 1.0,
+    "promptKind": "gemma4-12b",
+    "firstTokenId": 2,
+    "prompt": "Separate constrained-decoding experiment. Same official Gemma4 12B QAT Q4 weights/canonical nonthinking prompt/greedy profile. Native per-target GBNF allows Latin, numbers, punctuation and only the target non-Latin script. No glossary/source rewrite/output editing. Original52 sources plus8 new frozen contrasts; semantic acceptance remains independent of script validity.",
+    "scriptConstraint": true
   }
 }

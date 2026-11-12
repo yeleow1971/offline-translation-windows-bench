@@ -310,5 +310,53 @@
     "type": "fresh-context-contrast",
     "text": "The lighter shade was applied to the roots, not the tips; the tips remained dark.",
     "check": "Roots lighter, tips not lightened and still dark; preserve all contrast."
+  },
+  {
+    "id": "script-new-rinse",
+    "type": "fresh-script-contrast",
+    "text": "Rinse out the conditioner before drying the hair with a towel.",
+    "check": "Rinse-out conditioner; rinse precedes towel drying. No leave-in or hair-mask substitution."
+  },
+  {
+    "id": "script-new-masks",
+    "type": "fresh-script-contrast",
+    "text": "The stylist wears a protective face mask while applying a hair mask to the customer.",
+    "check": "Face covering belongs to stylist; hair treatment belongs to customer. Both meanings retained."
+  },
+  {
+    "id": "script-new-towel",
+    "type": "fresh-script-contrast",
+    "text": "After rinsing out the cool brown toner, wrap the hair in a warm towel.",
+    "check": "Cool brown describes colour; warm towel is physical temperature; rinse precedes wrapping."
+  },
+  {
+    "id": "script-new-sections",
+    "type": "fresh-script-contrast",
+    "text": "Keep the roots unchanged, darken the middle section, and leave the tips light.",
+    "check": "Three distinct locations: roots unchanged, middle darker, tips remain light."
+  },
+  {
+    "id": "script-new-date",
+    "type": "fresh-script-contrast",
+    "text": "The workshop is on 4 March; the salon reopens on 5 March at 10:15.",
+    "check": "Dates, month, reopening time and chronology preserved. No omitted month."
+  },
+  {
+    "id": "script-new-perfume",
+    "type": "fresh-script-contrast",
+    "text": "This scalp serum contains no added perfume. Do not apply it to irritated or broken skin.",
+    "check": "No added perfume qualifier; prohibit irritated or broken skin. No medical claims."
+  },
+  {
+    "id": "script-new-box",
+    "type": "fresh-script-contrast",
+    "text": "Each bottle contains 150 ml. The boxed set contains 2 bottles, not 1.",
+    "check": "150ml per bottle; set contains2, not1. Do not invent a different container or total."
+  },
+  {
+    "id": "script-new-evidence",
+    "type": "fresh-script-contrast",
+    "text": "The supplier says the treatment may reduce breakage; no independent clinical result is given.",
+    "check": "Attributed possible breakage reduction, not a guarantee; absence of independent clinical result retained."
   }
 ]
