@@ -176,5 +176,22 @@
     "temperature": 0.0,
     "threads": 4,
     "termProfile": "contextual-v2"
+  },
+  "sarvam4b": {
+    "model": "sarvamai/sarvam-translate",
+    "repository": "mradermacher/sarvam-translate-GGUF",
+    "revision": "00cbca64e1376d6b132b37a3485846731cddd936",
+    "file": "sarvam-translate.Q8_0.gguf",
+    "bytes": 4130402816,
+    "sha256": "0132a353972b534b84d8da1578ca4158d525d9ca223a97ee49cf946ede4fb524",
+    "license": "GPL-3.0 model card; Gemma base terms also relevant; no redistribution in this benchmark",
+    "temperature": 0,
+    "top_p": 1,
+    "repeat_penalty": 1.0,
+    "targetLanguages": [
+      "ta"
+    ],
+    "prompt": "Official system+user messages, exact pinned Gemma3 template, explicit token IDs with a single BOS; Tamil-only, no glossary or name editing.",
+    "threads": 4
   }
 }

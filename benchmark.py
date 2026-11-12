@@ -94,6 +94,11 @@ def save(data,path):
     body+=''.join(rows)+'<p>请保留相邻 JSON 文件供复核。显示三种文字或保留数字，不代表语义正确。</p></main></html>'
     path.with_suffix('.html').write_text(body,encoding='utf-8')
 
+def sarvam_prompt(text,language):
+    if language!='ta':raise ValueError('Sarvam profile is Tamil-only')
+    return '<bos><start_of_turn>user\nTranslate the text below to Tamil.\n\n'+text.strip()+'<end_of_turn>\n<start_of_turn>model\n'
+
+
 def gemma_prompt(text,language):
     target={'zh':('Chinese','zh-Hans'),'ms':('Malay','ms'),'ta':('Tamil','ta-MY')}[language]
     name,code=target
@@ -375,14 +380,16 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
-    parser.add_argument('--languages',default='zh,ms,ta')
+    parser.add_argument('--languages')
     parser.add_argument('--output-name')
     args=parser.parse_args()
     configure_model(args.model)
+    args.languages=args.languages or ','.join(selected.get('targetLanguages',['zh','ms','ta']))
+    if not set(args.languages.split(','))<=set(selected.get('targetLanguages',LANGUAGES)):raise ValueError('Language unsupported by selected profile')
     if args.self_check:self_check();return
     if selected.get('runtimeKind')=='ctranslate2':run_ct2(args);return
     verify_package()
@@ -473,9 +480,10 @@ def main():
                 native_input={}
                 if args.model=='gemma12b':
                     raw=gemma_prompt(case['text'],language)
+                if args.model=='sarvam4b':raw=sarvam_prompt(case['text'],language)
                 endpoint='/completion'
                 payload={'prompt':raw,'temperature':selected.get('temperature',.7),'top_p':selected['top_p'],'top_k':20,'repeat_penalty':selected['repeat_penalty'],'n_predict':768,'stream':False,'seed':0}
-                if args.model=='gemma12b':
+                if args.model in ['gemma12b','sarvam4b']:
                     tokens=native_prompt_tokens(request,raw,2)
                     payload['prompt']=tokens
                     native_input={'promptEncoding':'explicit token IDs, add_special false; no automatic BOS insertion',
