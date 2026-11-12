@@ -8,7 +8,7 @@ name: Manual free Windows translation QA
         type: choice
         required: true
         default: hymt7b
-        options: [hymt7b, qwen9b, hymt7b-domain]
+        options: [hymt7b, qwen9b, hymt7b-domain, gemma12b]
 
 permissions:
   contents: read

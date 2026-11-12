@@ -37,5 +37,19 @@
     "top_p": 0.6,
     "repeat_penalty": 1.05,
     "prompt": "official terminology/background instruction pattern; salon glossary and names/negation/qualifier rules; context 2048, output 768"
+  },
+  "gemma12b": {
+    "model": "google/translategemma-12b-it",
+    "repository": "bullerwins/translategemma-12b-it-GGUF",
+    "revision": "d7d1d8cc4ff53d4bc883ef33eae3894f07833b63",
+    "file": "translategemma-12b-it-Q4_K_M.gguf",
+    "bytes": 7300793664,
+    "sha256": "9196d728812afbf5efc10b539298585725edc3a4ecc092c22fdde5bbaf41879e",
+    "license": "Gemma Terms of Use (custom, not Apache)",
+    "quantizationSource": "Bullerwins community GGUF, base Google official",
+    "top_p": 1.0,
+    "temperature": 0.0,
+    "repeat_penalty": 1.0,
+    "prompt": "Exact canonical TranslateGemma turn prompt verified in pinned 12B GGUF metadata; locales zh-Hans/ms/ta-MY, greedy decoding; no domain glossary"
   }
 }
