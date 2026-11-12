@@ -1,0 +1,28 @@
+{
+  "hymt7b": {
+    "model": "tencent/Hy-MT2-7B",
+    "repository": "tencent/HY-MT2-7B-GGUF",
+    "revision": "ab8472660ac61fac25f1af43fac2599d52a8a775",
+    "file": "Hy-MT2-7B-Q4_K_M.gguf",
+    "bytes": 4624648896,
+    "sha256": "9f96256500f3fc1ab4d64336b58f52a949a95ad7516b0c229476eef782f9f77b",
+    "license": "Apache-2.0",
+    "quantizationSource": "official Tencent GGUF",
+    "top_p": 0.6,
+    "repeat_penalty": 1.05,
+    "prompt": "official Chinese instruction and exact verified 7B template"
+  },
+  "qwen9b": {
+    "model": "Qwen/Qwen3.5-9B",
+    "repository": "unsloth/Qwen3.5-9B-GGUF",
+    "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+    "file": "Qwen3.5-9B-Q4_K_M.gguf",
+    "bytes": 5680522464,
+    "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+    "license": "Apache-2.0",
+    "quantizationSource": "Unsloth community GGUF, base Qwen official",
+    "top_p": 0.8,
+    "repeat_penalty": 1.0,
+    "prompt": "faithful translation system prompt, embedded model chat template, server reasoning off"
+  }
+}

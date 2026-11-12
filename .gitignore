@@ -1,0 +1,7 @@
+engine/
+models/
+results/
+__pycache__/
+integrity.json
+runtime.zip
+*.part
