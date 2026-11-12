@@ -75,3 +75,8 @@ Primary sources: https://huggingface.co/google/madlad400-7b-mt ; https://hugging
 
 
 MADLAD transport checkpoint: the first dispatch was stopped during download (zero inference outputs), because observed serial throughput could not finish inside the fixed job bound. Four standard HTTP byte ranges are now used with strict 206/Content-Range checks, nonoverlapping writes to one scratch file (no doubled model disk space), bounded retries, immediate rejection of auth/rate errors, and a final full-file SHA256 before loading. No IP/account rotation, rate-limit bypass, paid acceleration, artifact/cache upload or provider API is used. This is a transfer correction, not a translation-quality verdict. The whole download is bounded at40minutes within the75minute job; incomplete scratch is never loaded.
+
+
+## Context-matched lexicon experiment
+
+The first sentence/name pipeline completed all132 outputs and fixed the unsupported technique ordinal and added scalp restriction, but still translated a hair mask as a face product and cool ash as an attractive colour. The `hymt7b-context` follow-up only supplies terminology when matching source words/context occur. It covers common haircare products, application locations, colour-temperature meanings, ingredients and possibility qualifiers, with face-covering/appliance/calendar/verb safeguards. Its target lexicon is an experimental research glossary, not professionally certified. No raw output words are post-edited; only the documented reversible proper-name restoration remains. Eight new original contrast sentences are frozen before this run (52cases/156 language outputs). These tests support a bounded qualitative decision, not an accuracy percentage or a claim of independent native review.

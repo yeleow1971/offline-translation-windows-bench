@@ -142,12 +142,48 @@ def restore_names(text,mapping):
     for marker,entry in mapping.items():text=text.replace(marker,entry['original'])
     return text,True
 
+
+def contextual_terms(text,language):
+    entries=[]
+    def add(source,zh,ms,ta):entries.append((source,{'zh':zh,'ms':ms,'ta':ta}[language]))
+    def has(pattern):return bool(re.search(pattern,text,re.I))
+    if has(r'\bshampoo\b'):add('shampoo','洗发水','syampu','ஷாம்பு')
+    if has(r'\bscalp\b'):add('scalp','头皮','kulit kepala','தலைச்சருமம்')
+    if has(r'\bhair\s+conditioner\b') or (has(r'\bconditioner\b') and not has(r'\bair[ -]conditioner\b')):
+        add('hair conditioner','护发素','perapi rambut','முடிக்கான கண்டிஷனர்')
+    if has(r'\brinse-out\s+conditioner\b'):add('rinse-out conditioner','需冲洗型护发素','perapi rambut jenis bilas','கழுவி அகற்ற வேண்டிய கண்டிஷனர்')
+    if has(r'\bleave-in\s+treatment\b'):add('leave-in treatment','免洗型护理产品','rawatan rambut tanpa bilas','கழுவத் தேவையில்லாத முடிப் பராமரிப்பு')
+    if has(r'\bhair[ -]mask\b') or (has(r'\bmask\b') and not has(r'\b(face|surgical|protective|wear|wore)\b')):
+        add('mask (hair treatment)','发膜','mask rambut','முடிப் பராமரிப்பு மாஸ்க்')
+    if has(r'\b(?:hair\s+|brown\s+|copper\s+|silver\s+|beige\s+|blonde\s+|and\s+)highlights\b'):
+        add('hair highlights','挑染','highlight rambut','ஹைலைட்ஸ்')
+    if has(r'\b(?:hair\s+|the\s+|their\s+|your\s+|dark\s+|lighter\s+)roots?\b'):
+        add('hair roots','发根','akar rambut','முடியின் வேர்ப்பகுதி')
+    if has(r'\b(?:hair\s+|the\s+|their\s+|your\s+|dark\s+|lighter\s+)ends?\b|\btips\b|\blengths?\s+and\s+ends?\b'):
+        add('hair ends or tips','发梢','hujung rambut','முடி நுனிகள்')
+    if has(r'\blighter\b'):add('lighter hair colour','较浅的发色','warna rambut yang lebih cerah','வெளிர் நிற முடி')
+    colours=r'(?:ash|brown|silver|beige|copper|blonde|red|black|grey|gray|colour|color|tone|shade)'
+    if has(r'\bcool\s+'+colours+r'\b'):add('cool (colour tone)','冷色调的','bertona sejuk','குளிர் நிறத் தொனியுடைய')
+    if has(r'\bwarm\s+'+colours+r'\b'):add('warm (colour tone)','暖色调的','bertona hangat','வெப்ப நிறத் தொனியுடைய')
+    if has(r'\b(?:cool|warm)\s+ash\b|\bash\s+(?:shade|tone|highlights)\b'):
+        add('ash (hair colour)','灰色调','rona kelabu','சாம்பல் நிறச் சாயல்')
+    if has(r'\bingredients\b'):add('ingredients','成分','bahan-bahan','மூலப்பொருட்கள்')
+    if has(r'\bsplit\s+ends\b'):add('split ends','分叉的发梢','hujung rambut bercabang','பிளவுபட்ட முடி நுனிகள்')
+    if has(r'\bbreakage\b'):add('hair breakage','断发','rambut putus','முடி உடைதல்')
+    if has(r'\bheat\s+protection\b'):add('heat protection','防热护发产品','produk pelindung haba','வெப்பப் பாதுகாப்பு முடிப் பராமரிப்புப் பொருள்')
+    if re.search(r'\bmay\s+(?:help|make|improve|reduce|increase|leave|feel|be|cause|support|prevent|change|have|vary)\b',text):
+        add('may (possibility)','可能','mungkin','கூடும்')
+    if has(r'\bno\s+added\b'):add('no added (ingredient)','未额外添加','tanpa tambahan','சேர்க்கப்படாத')
+    if has(r'\bscalp\s+serum\b'):add('scalp serum','头皮精华液','serum kulit kepala','தலைச்சரும சீரம்')
+    return entries
+
 def segmented_prompt(text,language,mapping):
     glossary={
         'zh':[('hair highlights','挑染'),('scalp','头皮'),('hair roots','发根'),('hair ends','发梢'),('lighter hair colour','较浅的发色')],
         'ms':[('hair highlights','highlight rambut'),('scalp','kulit kepala'),('hair roots','akar rambut'),('hair ends','hujung rambut'),('lighter hair colour','warna rambut yang lebih cerah')],
         'ta':[('hair highlights','ஹைலைட்ஸ்'),('scalp','தலைச்சருமம்'),('hair roots','முடியின் வேர்ப்பகுதி'),('hair ends','முடி நுனிகள்'),('lighter hair colour','வெளிர் நிற முடி')]
     }[language]
+    if selected.get('termProfile')=='contextual-v2':glossary=contextual_terms(text,language)
     terms='\n'.join(a+' 翻译成 '+b for a,b in glossary)
     markers='; '.join(k+' = '+v['kind'] for k,v in mapping.items())
     prompt=('参考下面的翻译：\n'+terms+'\n背景：这是美发沙龙与护发新闻。浅色指发色深浅。'
@@ -336,7 +372,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -413,7 +449,7 @@ def main():
             row={**case,'translations':{}};data['cases'].append(row);save(data,path)
             for language in languages:
                 print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
-                if args.model=='hymt7b-segment':
+                if args.model in ['hymt7b-segment','hymt7b-context']:
                     row['translations'][language]=translate_segmented(request,case['text'],language)
                     save(data,path);print('  已保存：'+row['translations'][language]['text'],flush=True)
                     continue

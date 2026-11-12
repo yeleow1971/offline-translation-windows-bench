@@ -262,5 +262,53 @@
     "type": "fresh-pipeline-holdout",
     "text": "Do not use a rinse-out conditioner as a leave-in treatment.",
     "check": "Both rinse-out and leave-in concepts plus prohibition must survive."
+  },
+  {
+    "id": "context-new-mask",
+    "type": "fresh-context-contrast",
+    "text": "Apply a small amount of the hair mask to towel-dried hair, avoiding the scalp.",
+    "check": "Hair mask, small amount, towel-dried hair, avoid scalp; no face product."
+  },
+  {
+    "id": "context-new-face",
+    "type": "fresh-context-contrast",
+    "text": "The stylist wore a protective face mask and tied her hair back.",
+    "check": "Protective face covering remains a face covering, never a hair treatment."
+  },
+  {
+    "id": "context-new-tone",
+    "type": "fresh-context-contrast",
+    "text": "Choose a warm beige tone rather than a cool silver tone.",
+    "check": "Warm beige chosen, cool silver rejected; no temperature or attractiveness reinterpretation."
+  },
+  {
+    "id": "context-new-oil",
+    "type": "fresh-context-contrast",
+    "text": "The hair oil may improve shine, but it does not make hair grow faster.",
+    "check": "May improve shine; does not speed growth. Do not promise guaranteed growth."
+  },
+  {
+    "id": "context-new-serum",
+    "type": "fresh-context-contrast",
+    "text": "The scalp serum contains no added colour, but the liquid is naturally pale yellow.",
+    "check": "No added colour is not colourless; naturally pale yellow preserved."
+  },
+  {
+    "id": "context-new-minutes",
+    "type": "fresh-context-contrast",
+    "text": "Rinse the mask out after 6 minutes; do not leave it on for 60 minutes.",
+    "check": "Hair treatment mask, rinse after6, prohibit60; synthetic directions."
+  },
+  {
+    "id": "context-new-charges",
+    "type": "fresh-context-contrast",
+    "text": "Cedar Square charges RM 48 for the consultation; River Point does not offer this service.",
+    "check": "Cedar costsRM48; River does not provide it. Exact names preserved."
+  },
+  {
+    "id": "context-new-root",
+    "type": "fresh-context-contrast",
+    "text": "The lighter shade was applied to the roots, not the tips; the tips remained dark.",
+    "check": "Roots lighter, tips not lightened and still dark; preserve all contrast."
   }
 ]
