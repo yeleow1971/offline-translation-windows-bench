@@ -330,7 +330,15 @@ def ct2_runtime():
     if ctranslate2.__version__!='4.6.2':raise RuntimeError('CTranslate2 version mismatch')
     if sentencepiece.__version__!='0.2.0' or numpy.__version__!='2.2.6':raise RuntimeError('Tokenizer/NumPy version mismatch')
     if not Path(ctranslate2.__file__).resolve().is_relative_to((root/'ct2-python').resolve()):raise RuntimeError('Unpinned global CTranslate2 import')
-    if 'int8' not in ctranslate2.get_supported_compute_types('cpu'):raise RuntimeError('CPU int8 unavailable')
+    required_type='float32' if selected.get('runtimeKind')=='marian' else 'int8'
+    if required_type not in ctranslate2.get_supported_compute_types('cpu'):raise RuntimeError('Required CPU compute type unavailable')
+    if selected.get('runtimeKind')=='marian':
+        tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(root/selected['modelDirectory']/selected['sentencePieceFile']))
+        if tokenizer.eos_id()!=0 or tokenizer.unk_id()!=1 or tokenizer.bos_id()!=-1:raise RuntimeError('Pinned HPLT tokenizer special-ID mismatch')
+        vocab=(root/selected['modelDirectory']/selected['vocabFile']).read_text(encoding='utf-8').splitlines()
+        if len(vocab)!=tokenizer.vocab_size() or any(line.rsplit('\t',1)[0]!=tokenizer.id_to_piece(i) for i,line in enumerate(vocab)):
+            raise RuntimeError('HPLT source vocabulary order mismatch')
+        return ctranslate2,tokenizer
     tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(root/'models/madlad7b/spiece.model'))
     config=json.loads((root/'models/madlad7b/config.json').read_text(encoding='utf-8'))
     if tokenizer.eos_id()!=2 or tokenizer.id_to_piece(0)!='<unk>' or config['decoder_start_token']!='<unk>' or config['eos_token']!='</s>':
@@ -339,11 +347,12 @@ def ct2_runtime():
 
 def run_ct2(args):
     verify_package();hw=hardware()
+    marian=selected.get('runtimeKind')=='marian'
     if os.name!='nt' or platform.machine().lower() not in ['amd64','x86_64']:raise RuntimeError('Windows x64 required')
     if hw['physicalRamBytes']<14*1024**3:raise RuntimeError('16GB Windows target required; no smaller-host override for this model')
-    if hw['availableRamBytes']<MODEL_BYTES+2*1024**3:raise RuntimeError('Insufficient available memory for INT8 weights plus runtime margin')
+    if hw['availableRamBytes']<(3*1024**3 if marian else MODEL_BYTES+2*1024**3):raise RuntimeError('Insufficient available memory for weights/conversion plus runtime margin')
     ct2,tokenizer=ct2_runtime()
-    modeldir=root/'models/madlad7b';download_ranges(MODEL_URL,modeldir/'model.bin',MODEL_BYTES,MODEL_SHA)
+    modeldir=root/selected.get('modelDirectory','models/madlad7b');download_ranges(MODEL_URL,modeldir/MODEL,MODEL_BYTES,MODEL_SHA)
     # All downloads are finished. No socket inference or provider fallback exists.
     socket.socket.connect=lambda *a,**k:(_ for _ in ()).throw(RuntimeError('Offline CT2 inference forbids sockets'))
     socket.socket.connect_ex=socket.socket.connect
@@ -355,21 +364,43 @@ def run_ct2(args):
     if Path(name).name!=name:raise ValueError('Invalid output name')
     path=root/'results'/(name+'.json');path.parent.mkdir(exist_ok=True)
     data={'model':selected['model'],'weightsRepository':selected['repository'],'revision':selected['revision'],'weightSha256':MODEL_SHA,
-        'runtime':'CTranslate2 4.6.2 Windows CPU','hardware':hw,'status':'loading','reviewStatus':'NOT ACCEPTED / requires semantic review',
+        'runtime':'CTranslate2 4.6.2 Windows CPU'+(', official MarianConverter float32' if marian else ''),'hardware':hw,'status':'loading','reviewStatus':'NOT ACCEPTED / requires semantic review',
         'configuration':{'computeType':'int8','threads':4,'beamSize':4,'maxTokens':512,'maxInputTokens':512,'sourceEosId':2,'decoderStartId':0,
             'sourceEosPiece':'</s>','returnEndToken':True,'repetitionPenalty':1.0,'noRepeatNgramSize':0,'modelSelector':args.model,'prompt':selected['prompt']},
         'network':'Pinned public downloads, then all Python sockets blocked. Local native CPU library; no AI account/API.',
         'websiteConnected':False,'publicationCapability':False,'cases':[]}
     save(data,path)
     try:
+        if marian:
+            from ctranslate2.converters.marian import MarianConverter,load_vocab
+            data['status']='converting';data['configuration'].update({'computeType':'float32','sourceEosId':0,'sourceEosAddedByRuntime':True,'decoderStartId':None,'decoderStart':'zero embedding (native Marian)'})
+            save(data,path);yaml_path=modeldir/'vocab.yml'
+            expected=[tokenizer.id_to_piece(i) for i in range(tokenizer.vocab_size())]
+            yaml_path.write_text(''.join(json.dumps(t,ensure_ascii=False)+': '+str(i)+'\n' for i,t in enumerate(expected)),encoding='utf-8')
+            if load_vocab(str(yaml_path))!=expected:raise RuntimeError('Marian YAML vocabulary order mismatch')
+            class AuditedMarian(MarianConverter):
+                def _load(self):
+                    spec=super()._load()
+                    if spec.decoder.start_from_zero_embedding is not True:raise RuntimeError('Native Marian zero-start mismatch')
+                    return spec
+            converted=modeldir/'converted-float32';start=time.monotonic()
+            AuditedMarian(str(modeldir/MODEL),[str(yaml_path),str(yaml_path)]).convert(str(converted),quantization='float32')
+            data['conversionSeconds']=round(time.monotonic()-start,2)
+            config=json.loads((converted/'config.json').read_text(encoding='utf-8'))
+            vocab=json.loads((converted/'shared_vocabulary.json').read_text(encoding='utf-8'))
+            if vocab!=expected or config['add_source_eos'] is not True or config['add_source_bos'] is not False:raise RuntimeError('Converted special-token/config proof mismatch')
+            data['conversionProof']={'converter':'pinned official MarianConverter, unmodified tensor conversion','zeroStartVerified':True,
+                'vocabularySize':len(vocab),'exactSentencePieceOrder':True,'sourceEosCountAddedByRuntime':1,'sourceBosCount':0,
+                'convertedConfig':config,'convertedModelSha256':digest(converted/'model.bin'),'convertedModelBytes':(converted/'model.bin').stat().st_size}
+            modeldir=converted;save(data,path)
         start=time.monotonic()
-        translator=ct2.Translator(str(modeldir),device='cpu',compute_type='int8',inter_threads=1,intra_threads=4)
+        translator=ct2.Translator(str(modeldir),device='cpu',compute_type='float32' if marian else 'int8',inter_threads=1,intra_threads=4)
         data['startupSeconds']=round(time.monotonic()-start,2);data['status']='running';save(data,path)
         for index,case in enumerate(cases,1):
             row={**case,'translations':{}};data['cases'].append(row);save(data,path)
             for language in languages:
-                tokens=tokenizer.encode('<2'+language+'> '+case['text'],out_type=str)+['</s>']
-                if len(tokens)>512 or tokens[-1]!='</s>' or '<unk>' in tokens:raise RuntimeError('Invalid or overlong source encoding')
+                tokens=tokenizer.encode(case['text'] if marian else '<2'+language+'> '+case['text'],out_type=str)+([] if marian else ['</s>'])
+                if not tokens or len(tokens)>512 or (not marian and tokens[-1]!='</s>') or (marian and '</s>' in tokens) or '<unk>' in tokens:raise RuntimeError('Invalid or overlong source encoding')
                 print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
                 mailbox=queue.Queue(maxsize=1)
                 def infer():
@@ -404,7 +435,7 @@ def self_check():
     assert restore_names(marked,mapping)==('NOVA STUDIO and River Point use Balayage.',True)
     assert restore_names(marked+marked,mapping)[1] is False
     verify_package()
-    if selected.get('runtimeKind')=='ctranslate2':ct2_runtime()
+    if selected.get('runtimeKind') in ['ctranslate2','marian']:ct2_runtime()
     cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
     assert len({c['id'] for c in cases})==len(cases) and len(cases)>=22
     exe=root/'engine/llama-server.exe'
@@ -421,7 +452,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -432,7 +463,7 @@ def main():
     args.languages=args.languages or ','.join(selected.get('targetLanguages',['zh','ms','ta']))
     if not set(args.languages.split(','))<=set(selected.get('targetLanguages',LANGUAGES)):raise ValueError('Language unsupported by selected profile')
     if args.self_check:self_check();return
-    if selected.get('runtimeKind')=='ctranslate2':run_ct2(args);return
+    if selected.get('runtimeKind') in ['ctranslate2','marian']:run_ct2(args);return
     verify_package()
     if os.name!='nt' or platform.machine().lower() not in ['amd64','x86_64']:raise RuntimeError('需要 Windows x64。')
     hw=hardware()

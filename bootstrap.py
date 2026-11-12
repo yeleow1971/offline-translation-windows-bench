@@ -41,9 +41,9 @@ def prepare_ct2(catalog):
                 destination.parent.mkdir(parents=True,exist_ok=True)
                 with archive.open(member) as source,destination.open('wb') as out:shutil.copyfileobj(source,out)
         path.unlink()
-    modeldir=root/'models/madlad7b'
+    modeldir=root/catalog.get('modelDirectory','models/madlad7b')
     for item in catalog['requiredFiles']:
-        if item['file']!='model.bin':fetch_pinned(item,modeldir/item['file'])
+        if item['file']!=catalog['file']:fetch_pinned(item,modeldir/item['file'])
     print('Prepared checksum-pinned PyPI CPU wheels and official-matched tokenizer; no large weights loaded.')
 
 def prepare(model=None):
@@ -62,12 +62,12 @@ def prepare(model=None):
             with archive.open(item) as source,destination.open('wb') as out:shutil.copyfileobj(source,out)
     path.unlink()
     catalog=json.loads((root/'models.json').read_text(encoding='utf-8')).get(model or os.environ.get('BENCH_MODEL',''),{})
-    if catalog.get('runtimeKind')=='ctranslate2':prepare_ct2(catalog)
+    if catalog.get('runtimeKind') in ['ctranslate2','marian']:prepare_ct2(catalog)
     names=['benchmark.py','windows_support.py','models.json','cases.json','bootstrap.py','README.md','.github/workflows/test.yml','.gitignore']
     paths=[root/n for n in names]+[p for p in engine.rglob('*') if p.is_file()]
-    if catalog.get('runtimeKind')=='ctranslate2':
+    if catalog.get('runtimeKind') in ['ctranslate2','marian']:
         paths.extend(p for p in (root/'ct2-python').rglob('*') if p.is_file())
-        paths.extend(p for p in (root/'models/madlad7b').rglob('*') if p.is_file() and p.name!='model.bin')
+        paths.extend(p for p in (root/catalog.get('modelDirectory','models/madlad7b')).rglob('*') if p.is_file() and p.name!=catalog['file'])
     files={}
     for p in paths:
         with p.open('rb') as source:sha=hashlib.file_digest(source,'sha256').hexdigest()
