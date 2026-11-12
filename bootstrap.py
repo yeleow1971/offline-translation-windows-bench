@@ -62,10 +62,10 @@ def prepare(model=None):
             with archive.open(item) as source,destination.open('wb') as out:shutil.copyfileobj(source,out)
     path.unlink()
     catalog=json.loads((root/'models.json').read_text(encoding='utf-8')).get(model or os.environ.get('BENCH_MODEL',''),{})
-    if catalog.get('runtimeKind') in ['ctranslate2','marian']:prepare_ct2(catalog)
+    if catalog.get('runtimeKind') in ['ctranslate2','marian','m2m100']:prepare_ct2(catalog)
     names=['benchmark.py','windows_support.py','models.json','cases.json','bootstrap.py','README.md','.github/workflows/test.yml','.gitignore']
     paths=[root/n for n in names]+[p for p in engine.rglob('*') if p.is_file()]
-    if catalog.get('runtimeKind') in ['ctranslate2','marian']:
+    if catalog.get('runtimeKind') in ['ctranslate2','marian','m2m100']:
         paths.extend(p for p in (root/'ct2-python').rglob('*') if p.is_file())
         paths.extend(p for p in (root/catalog.get('modelDirectory','models/madlad7b')).rglob('*') if p.is_file() and p.name!=catalog['file'])
     files={}

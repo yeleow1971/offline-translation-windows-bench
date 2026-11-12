@@ -457,5 +457,252 @@
     "top_p": 1.0,
     "repeat_penalty": 1.0,
     "modelDirectory": "models/madlad10b"
+  },
+  "m2m12b": {
+    "model": "facebook/m2m100_1.2B",
+    "repository": "jncraton/m2m100_1.2B-ct2-int8",
+    "revision": "e50078df6be13a88592b70ea42f4d74c2082e448",
+    "baseRevision": "7b36184180524c1a1bbfa37f120a608046250b98",
+    "file": "model.bin",
+    "bytes": 1249655149,
+    "sha256": "c97df052a558895317312470e1ff7cb8eae5416f7ae16214a2983c6853dd3ce5",
+    "license": "MIT",
+    "quantizationSource": "jncraton community CTranslate2 INT8 conversion; not original Meta weights or tensor parity proof",
+    "runtimeKind": "m2m100",
+    "modelDirectory": "models/m2m12b",
+    "requiredFiles": [
+      {
+        "file": "config.json",
+        "bytes": 189,
+        "sha256": "4244772990e30069563e3ddfb4ad6dc95bdfd2ac3de667ea8858c9b0a8433fa8",
+        "url": "https://huggingface.co/jncraton/m2m100_1.2B-ct2-int8/resolve/e50078df6be13a88592b70ea42f4d74c2082e448/config.json?download=true"
+      },
+      {
+        "file": "model.bin",
+        "bytes": 1249655149,
+        "sha256": "c97df052a558895317312470e1ff7cb8eae5416f7ae16214a2983c6853dd3ce5",
+        "url": "https://huggingface.co/jncraton/m2m100_1.2B-ct2-int8/resolve/e50078df6be13a88592b70ea42f4d74c2082e448/model.bin?download=true"
+      },
+      {
+        "file": "shared_vocabulary.json",
+        "bytes": 2796509,
+        "sha256": "7eb5d0ff184c6095c7c10f9911c0aea492250abd12854f9c3d787c64b1c6397e",
+        "url": "https://huggingface.co/jncraton/m2m100_1.2B-ct2-int8/resolve/e50078df6be13a88592b70ea42f4d74c2082e448/shared_vocabulary.json?download=true"
+      },
+      {
+        "file": "generation_config.json",
+        "bytes": 233,
+        "sha256": "aed76366507333ddbb8bd49960f23c82fe6446b3319a46a54befdb45324ccf61",
+        "url": "https://huggingface.co/facebook/m2m100_1.2B/resolve/7b36184180524c1a1bbfa37f120a608046250b98/generation_config.json?download=true"
+      },
+      {
+        "file": "sentencepiece.bpe.model",
+        "bytes": 2423393,
+        "sha256": "d8f7c76ed2a5e0822be39f0a4f95a55eb19c78f4593ce609e2edbc2aea4d380a",
+        "url": "https://huggingface.co/facebook/m2m100_1.2B/resolve/7b36184180524c1a1bbfa37f120a608046250b98/sentencepiece.bpe.model?download=true"
+      },
+      {
+        "file": "special_tokens_map.json",
+        "bytes": 1140,
+        "sha256": "c1a4f86c3874d279ae1b2a05162858db5dd6c61665d84223ed886cbcff08fda6",
+        "url": "https://huggingface.co/facebook/m2m100_1.2B/resolve/7b36184180524c1a1bbfa37f120a608046250b98/special_tokens_map.json?download=true"
+      },
+      {
+        "file": "tokenizer_config.json",
+        "bytes": 271,
+        "sha256": "1566a6cfa4f541a55594c9d5e090f530812d5de7c94882ea3af156962d9933ae",
+        "url": "https://huggingface.co/facebook/m2m100_1.2B/resolve/7b36184180524c1a1bbfa37f120a608046250b98/tokenizer_config.json?download=true"
+      },
+      {
+        "file": "vocab.json",
+        "bytes": 3708092,
+        "sha256": "b6e77e474aeea8f441363aca7614317c06381f3eacfe10fb9856d5081d1074cc",
+        "url": "https://huggingface.co/facebook/m2m100_1.2B/resolve/7b36184180524c1a1bbfa37f120a608046250b98/vocab.json?download=true"
+      }
+    ],
+    "pythonWheels": [
+      {
+        "package": "ctranslate2",
+        "version": "4.6.2",
+        "file": "ctranslate2-4.6.2-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/96/c7/9e221c6ba96b961a9318c5c179edae0567c783a9b81d14627f4f2b0cc866/ctranslate2-4.6.2-cp312-cp312-win_amd64.whl",
+        "bytes": 18587949,
+        "sha256": "3462d5dd849ed006ca98be0237a949d1cce5c285f09405c416a6f2b80181235e"
+      },
+      {
+        "package": "sentencepiece",
+        "version": "0.2.0",
+        "file": "sentencepiece-0.2.0-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c6/97/d159c32642306ee2b70732077632895438867b3b6df282354bd550cf2a67/sentencepiece-0.2.0-cp312-cp312-win_amd64.whl",
+        "bytes": 991994,
+        "sha256": "7a673a72aab81fef5ebe755c6e0cc60087d1f3a4700835d40537183c1703a45f"
+      },
+      {
+        "package": "numpy",
+        "version": "2.2.6",
+        "file": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/36/fa/8c9210162ca1b88529ab76b41ba02d433fd54fecaf6feb70ef9f124683f1/numpy-2.2.6-cp312-cp312-win_amd64.whl",
+        "bytes": 12614190,
+        "sha256": "c1f9540be57940698ed329904db803cf7a402f3fc200bfe599334c9bd84a40b2"
+      },
+      {
+        "package": "PyYAML",
+        "version": "6.0.2",
+        "file": "PyYAML-6.0.2-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/0c/e8/4f648c598b17c3d06e8753d7d13d57542b30d56e6c2dedf9c331ae56312e/PyYAML-6.0.2-cp312-cp312-win_amd64.whl",
+        "bytes": 156338,
+        "sha256": "7e7401d0de89a9a855c839bc697c079a4af81cf878373abd7dc625847d25cbd8"
+      },
+      {
+        "package": "setuptools",
+        "version": "80.9.0",
+        "file": "setuptools-80.9.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl",
+        "bytes": 1201486,
+        "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"
+      }
+    ],
+    "threads": 4,
+    "prompt": "Canonical English source language prefix, original source SentencePiece tokens and EOS; forced target language prefix in decoder; beam5; no glossary/source rewrite/output editing.",
+    "tokenizerProof": {
+      "sourceTargetEncodings": 180,
+      "exactKnownVocabularyEntries": 128104,
+      "paddedVocabularySize": 128112,
+      "paddingEntries": [
+        "madeupword0",
+        "madeupword1",
+        "madeupword2",
+        "madeupword3",
+        "madeupword4",
+        "madeupword5",
+        "madeupword6",
+        "madeupword7"
+      ],
+      "sourceLanguage": "en",
+      "sourcePrefix": "__en__",
+      "sourceEosId": 2,
+      "decoderStartId": 2,
+      "targetPrefixByLanguage": {
+        "zh": [
+          "__zh__"
+        ],
+        "ms": [
+          "__ms__"
+        ],
+        "ta": [
+          "__ta__"
+        ]
+      },
+      "originalEnglishInputsUnchanged": true,
+      "fullWeightInferenceOnLocal8GBHost": false,
+      "languageTokensInOrder": [
+        "__af__",
+        "__am__",
+        "__ar__",
+        "__ast__",
+        "__az__",
+        "__ba__",
+        "__be__",
+        "__bg__",
+        "__bn__",
+        "__br__",
+        "__bs__",
+        "__ca__",
+        "__ceb__",
+        "__cs__",
+        "__cy__",
+        "__da__",
+        "__de__",
+        "__el__",
+        "__en__",
+        "__es__",
+        "__et__",
+        "__fa__",
+        "__ff__",
+        "__fi__",
+        "__fr__",
+        "__fy__",
+        "__ga__",
+        "__gd__",
+        "__gl__",
+        "__gu__",
+        "__ha__",
+        "__he__",
+        "__hi__",
+        "__hr__",
+        "__ht__",
+        "__hu__",
+        "__hy__",
+        "__id__",
+        "__ig__",
+        "__ilo__",
+        "__is__",
+        "__it__",
+        "__ja__",
+        "__jv__",
+        "__ka__",
+        "__kk__",
+        "__km__",
+        "__kn__",
+        "__ko__",
+        "__lb__",
+        "__lg__",
+        "__ln__",
+        "__lo__",
+        "__lt__",
+        "__lv__",
+        "__mg__",
+        "__mk__",
+        "__ml__",
+        "__mn__",
+        "__mr__",
+        "__ms__",
+        "__my__",
+        "__ne__",
+        "__nl__",
+        "__no__",
+        "__ns__",
+        "__oc__",
+        "__or__",
+        "__pa__",
+        "__pl__",
+        "__ps__",
+        "__pt__",
+        "__ro__",
+        "__ru__",
+        "__sd__",
+        "__si__",
+        "__sk__",
+        "__sl__",
+        "__so__",
+        "__sq__",
+        "__sr__",
+        "__ss__",
+        "__su__",
+        "__sv__",
+        "__sw__",
+        "__ta__",
+        "__th__",
+        "__tl__",
+        "__tn__",
+        "__tr__",
+        "__uk__",
+        "__ur__",
+        "__uz__",
+        "__vi__",
+        "__wo__",
+        "__xh__",
+        "__yi__",
+        "__yo__",
+        "__zh__",
+        "__zu__"
+      ],
+      "usedLanguageTokenIds": {
+        "en": 128022,
+        "zh": 128102,
+        "ms": 128064,
+        "ta": 128089
+      }
+    }
   }
 }

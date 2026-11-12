@@ -348,6 +348,20 @@ def ct2_runtime():
         if len(vocab)!=tokenizer.vocab_size() or any(line.rsplit('\t',1)[0]!=tokenizer.id_to_piece(i) for i,line in enumerate(vocab)):
             raise RuntimeError('HPLT source vocabulary order mismatch')
         return ctranslate2,tokenizer
+    if selected.get('runtimeKind')=='m2m100':
+        modeldir=root/selected['modelDirectory']
+        tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(modeldir/'sentencepiece.bpe.model'))
+        vocab=json.loads((modeldir/'shared_vocabulary.json').read_text(encoding='utf-8'))
+        base=json.loads((modeldir/'vocab.json').read_text(encoding='utf-8'))
+        expected=[None]*len(base)
+        for token,index in base.items():expected[index]=token
+        expected+=selected['tokenizerProof']['languageTokensInOrder']+selected['tokenizerProof']['paddingEntries']
+        config=json.loads((modeldir/'config.json').read_text(encoding='utf-8'))
+        if vocab!=expected or len(vocab)!=128112 or config['decoder_start_token']!='</s>' or config['eos_token']!='</s>' or config['add_source_bos'] or config['add_source_eos']:
+            raise RuntimeError('M2M100 exact vocabulary/decoder/source-special proof mismatch')
+        for lang,index in selected['tokenizerProof']['usedLanguageTokenIds'].items():
+            if vocab[index]!='__'+lang+'__':raise RuntimeError('M2M100 language ID mismatch')
+        return ctranslate2,tokenizer
     tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(root/selected.get('modelDirectory','models/madlad7b')/'spiece.model'))
     config=json.loads((root/selected.get('modelDirectory','models/madlad7b')/'config.json').read_text(encoding='utf-8'))
     if tokenizer.eos_id()!=2 or tokenizer.id_to_piece(0)!='<unk>' or config['decoder_start_token']!='<unk>' or config['eos_token']!='</s>':
@@ -357,6 +371,7 @@ def ct2_runtime():
 def run_ct2(args):
     verify_package();hw=hardware()
     marian=selected.get('runtimeKind')=='marian'
+    m2m=selected.get('runtimeKind')=='m2m100'
     if os.name!='nt' or platform.machine().lower() not in ['amd64','x86_64']:raise RuntimeError('Windows x64 required')
     if hw['physicalRamBytes']<14*1024**3:raise RuntimeError('16GB Windows target required; no smaller-host override for this model')
     if hw['availableRamBytes']<(3*1024**3 if marian else MODEL_BYTES+2*1024**3):raise RuntimeError('Insufficient available memory for weights/conversion plus runtime margin')
@@ -378,6 +393,7 @@ def run_ct2(args):
             'sourceEosPiece':'</s>','returnEndToken':True,'repetitionPenalty':1.0,'noRepeatNgramSize':0,'modelSelector':args.model,'prompt':selected['prompt']},
         'network':'Pinned public downloads, then all Python sockets blocked. Local native CPU library; no AI account/API.',
         'websiteConnected':False,'publicationCapability':False,'cases':[]}
+    if m2m:data['configuration'].update({'beamSize':5,'decoderStartId':2,'sourceLanguagePrefix':'__en__','targetPrefixRequired':True})
     save(data,path)
     try:
         if marian:
@@ -409,21 +425,29 @@ def run_ct2(args):
             row={**case,'translations':{}};data['cases'].append(row);save(data,path)
             for language in languages:
                 tokens=tokenizer.encode(case['text'] if marian else '<2'+language+'> '+case['text'],out_type=str)+([] if marian else ['</s>'])
+                if m2m:tokens=['__en__']+tokenizer.encode(case['text'],out_type=str)+['</s>']
+                parameters={'beam_size':5 if m2m else 4,'repetition_penalty':1.0,'no_repeat_ngram_size':0,'max_input_length':0,'max_decoding_length':512,'end_token':'</s>','return_end_token':True}
+                if m2m:parameters['target_prefix']=[['__'+language+'__']]
                 if not tokens or len(tokens)>512 or (not marian and tokens[-1]!='</s>') or (marian and '</s>' in tokens) or '<unk>' in tokens:raise RuntimeError('Invalid or overlong source encoding')
                 print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
                 mailbox=queue.Queue(maxsize=1)
                 def infer():
-                    try:mailbox.put((True,translator.translate_batch([tokens],beam_size=4,repetition_penalty=1.0,no_repeat_ngram_size=0,
-                        max_input_length=0,max_decoding_length=512,end_token='</s>',return_end_token=True)[0]))
+                    try:mailbox.put((True,translator.translate_batch([tokens],**parameters)[0]))
                     except BaseException as error:mailbox.put((False,error))
                 begin=time.monotonic();threading.Thread(target=infer,daemon=True).start()
                 response=wait_for_reply(mailbox,begin);output=response.hypotheses[0]
                 ended=bool(output) and output[-1]=='</s>'
-                text=tokenizer.decode(output[:-1] if ended else output).strip()
+                body=output[:-1] if ended else output
+                if m2m and body and body[0]=='__'+language+'__':body=body[1:]
+                text=tokenizer.decode(body).strip()
                 finished=ended and bool(text) and '<unk>' not in output and '\ufffd' not in text
                 row['translations'][language]={'text':text,'seconds':round(time.monotonic()-begin,2),'finished':finished,
                     'stopReason':'eos' if ended else 'limit-or-no-eos','sourceTokens':tokens,'outputTokens':output,
                     'timings':{'predicted_n':len(output)},'promptSha256':hashlib.sha256(json.dumps(tokens,ensure_ascii=False).encode()).hexdigest()}
+                if m2m:
+                    value=row['translations'][language];value['targetPrefix']=['__'+language+'__'];value['inferenceParameters']=parameters
+                    value['promptSha256']=hashlib.sha256(json.dumps({'tokens':tokens,'parameters':parameters},ensure_ascii=False,sort_keys=True).encode()).hexdigest()
+                    value['finished']=finished and bool(output) and output[0]=='__'+language+'__'
                 save(data,path);print('  已保存：'+text,flush=True)
         data['status']='complete';save(data,path)
     except BaseException as error:
@@ -444,7 +468,7 @@ def self_check():
     assert restore_names(marked,mapping)==('NOVA STUDIO and River Point use Balayage.',True)
     assert restore_names(marked+marked,mapping)[1] is False
     verify_package()
-    if selected.get('runtimeKind') in ['ctranslate2','marian']:ct2_runtime()
+    if selected.get('runtimeKind') in ['ctranslate2','marian','m2m100']:ct2_runtime()
     cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
     assert len({c['id'] for c in cases})==len(cases) and len(cases)>=22
     exe=root/'engine/llama-server.exe'
@@ -461,7 +485,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -472,7 +496,7 @@ def main():
     args.languages=args.languages or ','.join(selected.get('targetLanguages',['zh','ms','ta']))
     if not set(args.languages.split(','))<=set(selected.get('targetLanguages',LANGUAGES)):raise ValueError('Language unsupported by selected profile')
     if args.self_check:self_check();return
-    if selected.get('runtimeKind') in ['ctranslate2','marian']:run_ct2(args);return
+    if selected.get('runtimeKind') in ['ctranslate2','marian','m2m100']:run_ct2(args);return
     verify_package()
     if os.name!='nt' or platform.machine().lower() not in ['amd64','x86_64']:raise RuntimeError('需要 Windows x64。')
     hw=hardware()
