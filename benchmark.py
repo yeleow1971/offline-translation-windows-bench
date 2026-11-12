@@ -1,5 +1,5 @@
 """Offline Translation QA 16GB offline model research tool. No website credentials or publication capability."""
-import argparse,datetime,hashlib,html,json,os,platform,queue,re,secrets,shutil,socket,subprocess,sys,threading,time,urllib.error,urllib.request
+import argparse,concurrent.futures,datetime,hashlib,html,json,os,platform,queue,re,secrets,shutil,socket,subprocess,sys,threading,time,urllib.error,urllib.request
 from pathlib import Path
 from windows_support import hardware,ChildJob,clean_child_env
 
@@ -185,6 +185,57 @@ def translate_segmented(request,text,language):
         'promptSha256':hashlib.sha256(json.dumps([v['promptSha256'] for v in segments]).encode()).hexdigest()}
 
 
+
+def download_ranges(url,path,total,sha256,open_url=urllib.request.urlopen,deadline_seconds=2400):
+    """Four ordinary verified HTTP ranges, disjoint writes, final whole-file SHA."""
+    if path.exists():
+        if path.stat().st_size==total and digest(path)==sha256:return
+        raise RuntimeError('Existing model file mismatch; not overwritten')
+    path.parent.mkdir(parents=True,exist_ok=True)
+    if shutil.disk_usage(path.parent).free<total+2*1024**3:raise RuntimeError('Insufficient scratch disk')
+    part=path.with_suffix(path.suffix+'.parallel.part')
+    if part.exists():raise RuntimeError('Previous parallel scratch exists; use a fresh research directory')
+    with part.open('wb') as f:f.truncate(total)
+    progress=[0]*4;stop=threading.Event();begin=time.monotonic()
+    def fetch(index):
+        start=total*index//4;end=total*(index+1)//4-1;position=start
+        with part.open('r+b',buffering=0) as out:
+            for attempt in range(4):
+                if position>end:return
+                if stop.is_set():raise RuntimeError('Download stopped')
+                req=urllib.request.Request(url+'&range_start='+str(position),headers={'Range':f'bytes={position}-{end}','Cache-Control':'no-cache','User-Agent':'Offline-Translation-QA/1'})
+                try:
+                    with open_url(req,timeout=45) as response:
+                        if response.status!=206 or response.headers.get('Content-Range')!=f'bytes {position}-{end}/{total}':raise RuntimeError('Range response mismatch')
+                        out.seek(position)
+                        while chunk:=response.read(1024*1024):
+                            if stop.is_set():raise RuntimeError('Download stopped')
+                            if position+len(chunk)>end+1:raise RuntimeError('Range overrun')
+                            if out.write(chunk)!=len(chunk):raise OSError('Short scratch write')
+                            position+=len(chunk);progress[index]=position-start
+                    if position==end+1:return
+                    raise OSError('Range ended early')
+                except (urllib.error.URLError,TimeoutError,OSError):
+                    if attempt==3:raise
+                    # Never retry an HTTP rate/authorization rejection aggressively.
+                    if isinstance(sys.exception(),urllib.error.HTTPError) and sys.exception().code in [401,403,429]:raise
+                    time.sleep(2)
+    pool=concurrent.futures.ThreadPoolExecutor(max_workers=4)
+    try:
+        futures=[pool.submit(fetch,i) for i in range(4)]
+        while not all(f.done() for f in futures):
+            for f in futures:
+                if f.done():f.result()
+            if time.monotonic()-begin>deadline_seconds:raise TimeoutError('Bounded cloud model download deadline reached')
+            print(f'并行下载 {sum(progress)/total:.0%} ({sum(progress)/1024**3:.2f} GiB)',flush=True)
+            time.sleep(5)
+        for f in futures:f.result()
+        if sum(progress)!=total or digest(part)!=sha256:raise RuntimeError('Whole model checksum mismatch')
+        part.replace(path)
+        print('All four ranges and whole model SHA256 verified.',flush=True)
+    finally:
+        stop.set();pool.shutdown(wait=True,cancel_futures=True)
+
 def ct2_runtime():
     if sys.version_info[:2]!=(3,12):raise RuntimeError('This pinned CTranslate2 wheel set requires Python 3.12 x64')
     sys.path.insert(0,str(root/'ct2-python'))
@@ -207,7 +258,7 @@ def run_ct2(args):
     if hw['physicalRamBytes']<14*1024**3:raise RuntimeError('16GB Windows target required; no smaller-host override for this model')
     if hw['availableRamBytes']<MODEL_BYTES+2*1024**3:raise RuntimeError('Insufficient available memory for INT8 weights plus runtime margin')
     ct2,tokenizer=ct2_runtime()
-    modeldir=root/'models/madlad7b';get_model(modeldir/'model.bin')
+    modeldir=root/'models/madlad7b';download_ranges(MODEL_URL,modeldir/'model.bin',MODEL_BYTES,MODEL_SHA)
     # All downloads are finished. No socket inference or provider fallback exists.
     socket.socket.connect=lambda *a,**k:(_ for _ in ()).throw(RuntimeError('Offline CT2 inference forbids sockets'))
     socket.socket.connect_ex=socket.socket.connect
