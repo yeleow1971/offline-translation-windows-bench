@@ -348,8 +348,8 @@ def ct2_runtime():
         if len(vocab)!=tokenizer.vocab_size() or any(line.rsplit('\t',1)[0]!=tokenizer.id_to_piece(i) for i,line in enumerate(vocab)):
             raise RuntimeError('HPLT source vocabulary order mismatch')
         return ctranslate2,tokenizer
-    tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(root/'models/madlad7b/spiece.model'))
-    config=json.loads((root/'models/madlad7b/config.json').read_text(encoding='utf-8'))
+    tokenizer=sentencepiece.SentencePieceProcessor(model_file=str(root/selected.get('modelDirectory','models/madlad7b')/'spiece.model'))
+    config=json.loads((root/selected.get('modelDirectory','models/madlad7b')/'config.json').read_text(encoding='utf-8'))
     if tokenizer.eos_id()!=2 or tokenizer.id_to_piece(0)!='<unk>' or config['decoder_start_token']!='<unk>' or config['eos_token']!='</s>':
         raise RuntimeError('Official decoder-start/EOS proof mismatch')
     return ctranslate2,tokenizer
@@ -461,7 +461,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)

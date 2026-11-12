@@ -361,5 +361,101 @@
     "firstTokenId": 2,
     "prompt": "Separate constrained-decoding experiment. Same official Gemma4 12B QAT Q4 weights/canonical nonthinking prompt/greedy profile. Native per-target GBNF allows Latin, numbers, punctuation and only the target non-Latin script. No glossary/source rewrite/output editing. Original52 sources plus8 new frozen contrasts; semantic acceptance remains independent of script validity.",
     "scriptConstraint": true
+  },
+  "madlad10b": {
+    "model": "google/madlad400-10b-mt",
+    "repository": "Heng666/madlad400-10b-mt-ct2-int8",
+    "revision": "38f6669b80b1690283befd26bb297968318e9470",
+    "file": "model.bin",
+    "bytes": 10730130249,
+    "sha256": "2d5df751c281f4480cd45529b88f7b7dfff7e387469d619d37b986a00150734d",
+    "license": "Apache-2.0",
+    "quantizationSource": "Heng666 community CTranslate2 INT8 conversion, not Google original weights",
+    "baseRevision": "9f2797629c31e69617186dbe5f0ca43bf662f36d",
+    "requiredFiles": [
+      {
+        "file": "model.bin",
+        "bytes": 10730130249,
+        "sha256": "2d5df751c281f4480cd45529b88f7b7dfff7e387469d619d37b986a00150734d",
+        "url": "https://huggingface.co/Heng666/madlad400-10b-mt-ct2-int8/resolve/38f6669b80b1690283befd26bb297968318e9470/model.bin?download=true"
+      },
+      {
+        "file": "config.json",
+        "bytes": 224,
+        "sha256": "90fb54962455a4e0a0bc7235c0f063d7e46d9c1a1ae003af8059809abd6aeece",
+        "url": "https://huggingface.co/Heng666/madlad400-10b-mt-ct2-int8/resolve/38f6669b80b1690283befd26bb297968318e9470/config.json?download=true"
+      },
+      {
+        "file": "shared_vocabulary.json",
+        "bytes": 5477099,
+        "sha256": "c327551ce3ca6efc7b437e11a267f79979893332dda8a1d146e2c950815193f8",
+        "url": "https://huggingface.co/Heng666/madlad400-10b-mt-ct2-int8/resolve/38f6669b80b1690283befd26bb297968318e9470/shared_vocabulary.json?download=true"
+      },
+      {
+        "file": "spiece.model",
+        "bytes": 4427844,
+        "sha256": "ef11ac9a22c7503492f56d48dce53be20e339b63605983e9f27d2cd0e0f3922c",
+        "url": "https://huggingface.co/Heng666/madlad400-10b-mt-ct2-int8/resolve/38f6669b80b1690283befd26bb297968318e9470/spiece.model?download=true"
+      }
+    ],
+    "pythonWheels": [
+      {
+        "package": "ctranslate2",
+        "version": "4.6.2",
+        "file": "ctranslate2-4.6.2-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/96/c7/9e221c6ba96b961a9318c5c179edae0567c783a9b81d14627f4f2b0cc866/ctranslate2-4.6.2-cp312-cp312-win_amd64.whl",
+        "bytes": 18587949,
+        "sha256": "3462d5dd849ed006ca98be0237a949d1cce5c285f09405c416a6f2b80181235e"
+      },
+      {
+        "package": "sentencepiece",
+        "version": "0.2.0",
+        "file": "sentencepiece-0.2.0-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c6/97/d159c32642306ee2b70732077632895438867b3b6df282354bd550cf2a67/sentencepiece-0.2.0-cp312-cp312-win_amd64.whl",
+        "bytes": 991994,
+        "sha256": "7a673a72aab81fef5ebe755c6e0cc60087d1f3a4700835d40537183c1703a45f"
+      },
+      {
+        "package": "numpy",
+        "version": "2.2.6",
+        "file": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/36/fa/8c9210162ca1b88529ab76b41ba02d433fd54fecaf6feb70ef9f124683f1/numpy-2.2.6-cp312-cp312-win_amd64.whl",
+        "bytes": 12614190,
+        "sha256": "c1f9540be57940698ed329904db803cf7a402f3fc200bfe599334c9bd84a40b2"
+      },
+      {
+        "package": "PyYAML",
+        "version": "6.0.2",
+        "file": "PyYAML-6.0.2-cp312-cp312-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/0c/e8/4f648c598b17c3d06e8753d7d13d57542b30d56e6c2dedf9c331ae56312e/PyYAML-6.0.2-cp312-cp312-win_amd64.whl",
+        "bytes": 156338,
+        "sha256": "7e7401d0de89a9a855c839bc697c079a4af81cf878373abd7dc625847d25cbd8"
+      },
+      {
+        "package": "setuptools",
+        "version": "80.9.0",
+        "file": "setuptools-80.9.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl",
+        "bytes": 1201486,
+        "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"
+      }
+    ],
+    "runtimeKind": "ctranslate2",
+    "threads": 4,
+    "prompt": "Official target language prefix and SentencePiece; explicit source EOS2, decoder start0; beam4, no repetition suppression; no chat template or domain glossary",
+    "tokenizerProof": {
+      "officialSentencepieceSha256": "ef11ac9a22c7503492f56d48dce53be20e339b63605983e9f27d2cd0e0f3922c",
+      "eosId": 2,
+      "decoderStartId": 0,
+      "exactVocabularyOrder": true,
+      "firstVocabularyEntries": [
+        "<unk>",
+        "<s>",
+        "</s>"
+      ]
+    },
+    "top_p": 1.0,
+    "repeat_penalty": 1.0,
+    "modelDirectory": "models/madlad10b"
   }
 }

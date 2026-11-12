@@ -8,14 +8,14 @@ name: Manual free Windows translation QA
         type: choice
         required: true
         default: hymt7b
-        options: [hymt7b, qwen9b, hymt7b-domain, gemma12b, hymt7b-segment, madlad7b, hymt7b-context, sarvam4b, qwen14b, gemma4, agaram, gemma412b, hplt-ta, gemma412b-script]
+        options: [hymt7b, qwen9b, hymt7b-domain, gemma12b, hymt7b-segment, madlad7b, hymt7b-context, sarvam4b, qwen14b, gemma4, agaram, gemma412b, hplt-ta, gemma412b-script, madlad10b]
 
 permissions:
   contents: read
 
 concurrency:
   # Two bounded standard/free lanes: 12B and other candidates.
-  group: manual-windows-model-qa-${{ (inputs.model == 'gemma12b' || inputs.model == 'madlad7b' || inputs.model == 'sarvam4b' || inputs.model == 'qwen14b' || inputs.model == 'agaram' || inputs.model == 'gemma412b') && 'large' || 'baseline' }}
+  group: manual-windows-model-qa-${{ (inputs.model == 'gemma12b' || inputs.model == 'madlad7b' || inputs.model == 'sarvam4b' || inputs.model == 'qwen14b' || inputs.model == 'agaram' || inputs.model == 'gemma412b' || inputs.model == 'madlad10b') && 'large' || 'baseline' }}
   cancel-in-progress: false
 
 jobs:
