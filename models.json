@@ -193,5 +193,59 @@
     ],
     "prompt": "Official system+user messages, exact pinned Gemma3 template, explicit token IDs with a single BOS; Tamil-only, no glossary or name editing.",
     "threads": 4
+  },
+  "qwen14b": {
+    "model": "Qwen/Qwen3-14B",
+    "repository": "Qwen/Qwen3-14B-GGUF",
+    "revision": "530227a7d994db8eca5ab5ced2fb692b614357fd",
+    "file": "Qwen3-14B-Q4_K_M.gguf",
+    "bytes": 9001752960,
+    "sha256": "500a8806e85ee9c83f3ae08420295592451379b4f8cf2d0f41c15dffeb6b81f0",
+    "license": "apache-2.0",
+    "quantizationSource": "official author GGUF",
+    "threads": 4,
+    "top_p": 0.8,
+    "temperature": 0.7,
+    "repeat_penalty": 1.0,
+    "promptKind": "qwen3",
+    "firstTokenId": 151644,
+    "prompt": "Checked official and embedded canonical templates; explicit token IDs; no glossary, source rewriting, segmentation or output editing. Qwen non-thinking recommended sampling; Gemma4/Agaram greedy research profile."
+  },
+  "gemma4": {
+    "model": "google/gemma-4-E4B-it",
+    "repository": "google/gemma-4-E4B-it-qat-q4_0-gguf",
+    "revision": "4b4a2c1d584be7264f87aac328a1bc739ce81b6c",
+    "file": "gemma-4-E4B_q4_0-it.gguf",
+    "bytes": 5154941280,
+    "sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+    "license": "apache-2.0",
+    "quantizationSource": "official author GGUF",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0,
+    "repeat_penalty": 1.0,
+    "promptKind": "gemma4",
+    "firstTokenId": 2,
+    "prompt": "Checked official and embedded canonical templates; explicit token IDs; no glossary, source rewriting, segmentation or output editing. Qwen non-thinking recommended sampling; Gemma4/Agaram greedy research profile."
+  },
+  "agaram": {
+    "model": "murai-labs/agaram-2.5b-instruct",
+    "repository": "murai-labs/agaram-2.5b-gguf",
+    "revision": "d8df447b1c6aa958a320761325a04bf14b42a921",
+    "file": "agaram-2.5b-instruct-Q8_0.gguf",
+    "bytes": 2688722752,
+    "sha256": "383b94bb86341500e80e31ced0d669ddd8d0f833ad7aad96638237be1871095a",
+    "license": "apache-2.0",
+    "quantizationSource": "official author GGUF",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0,
+    "repeat_penalty": 1.0,
+    "promptKind": "agaram",
+    "firstTokenId": 1,
+    "prompt": "Checked official and embedded canonical templates; explicit token IDs; no glossary, source rewriting, segmentation or output editing. Qwen non-thinking recommended sampling; Gemma4/Agaram greedy research profile.",
+    "targetLanguages": [
+      "ta"
+    ]
   }
 }
