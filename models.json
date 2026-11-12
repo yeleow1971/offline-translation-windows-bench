@@ -247,5 +247,22 @@
     "targetLanguages": [
       "ta"
     ]
+  },
+  "gemma412b": {
+    "model": "google/gemma-4-12B-it",
+    "repository": "google/gemma-4-12B-it-qat-q4_0-gguf",
+    "revision": "29d097773436b69ff9feafd636ab4cf873786537",
+    "file": "gemma-4-12b-it-qat-q4_0.gguf",
+    "bytes": 6975879296,
+    "sha256": "93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b",
+    "license": "apache-2.0",
+    "quantizationSource": "official author GGUF",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0,
+    "repeat_penalty": 1.0,
+    "promptKind": "gemma4-12b",
+    "firstTokenId": 2,
+    "prompt": "Official Gemma4 12B QAT Q4; distinct12B non-thinking empty-thought prefix, both author and embedded canonical templates checked on all52 original cases/all3 languages; explicit token IDs with single BOS, no glossary/source rewriting/segmentation/output editing; greedy documented research profile."
   }
 }
