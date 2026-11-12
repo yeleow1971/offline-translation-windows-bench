@@ -136,6 +136,7 @@ def translate_round2(request,text,language):
     payload={'prompt':tokens,'temperature':selected['temperature'],'top_p':selected['top_p'],
         'top_k':selected.get('top_k',20),'min_p':0,'repeat_penalty':1.0,'n_predict':768,'stream':False,'seed':0}
     if selected.get('scriptConstraint'):payload['grammar']=target_script_grammar(language)
+    if 'presence_penalty' in selected:payload['presence_penalty']=selected['presence_penalty']
     begin=time.monotonic();mailbox=queue.Queue(maxsize=1)
     def infer():
         try:mailbox.put((True,request('/completion',payload)))
@@ -143,6 +144,7 @@ def translate_round2(request,text,language):
     threading.Thread(target=infer,daemon=True).start();response=wait_for_reply(mailbox,begin)
     return {'text':response['content'].strip(),'seconds':round(time.monotonic()-begin,2),'finished':completion_ok(response),
         'stopReason':response.get('stop_type'),'contextTruncated':response.get('truncated',False),'timings':response.get('timings',{}),
+        'returnedSampling':response.get('generation_settings',{}),
         'promptEncoding':'explicit token IDs, add_special false; checked canonical author template',
         'firstToken':tokens[0],'secondToken':tokens[1],'inputTokens':tokens,'inputTokenCount':len(tokens),
         'canonicalTextSha256':hashlib.sha256(raw.encode()).hexdigest(),
@@ -485,7 +487,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -531,7 +533,7 @@ def main():
     path=result_dir/(name+'.json')
     data={'model':selected['model'],'weightsRepository':selected['repository'],'revision':selected['revision'],'weightSha256':MODEL_SHA,
           'runtime':'official llama.cpp b12282 Windows CPU','hardware':hw,'status':'starting','reviewStatus':'NOT ACCEPTED / requires semantic review',
-          'configuration':{'scriptConstraint':selected.get('scriptConstraint',False),'loadMode':'none','repack':False,'context':2048,'threads':selected.get('threads',2),'temperature':selected.get('temperature',.7),'top_p':selected['top_p'],'top_k':20,'repeat_penalty':selected['repeat_penalty'],'seed':0,'maxTokens':768,'prompt':selected['prompt'],'modelSelector':args.model},
+          'configuration':{'presencePenalty':selected.get('presence_penalty',0),'scriptConstraint':selected.get('scriptConstraint',False),'loadMode':'none','repack':False,'context':2048,'threads':selected.get('threads',2),'temperature':selected.get('temperature',.7),'top_p':selected['top_p'],'top_k':20,'repeat_penalty':selected['repeat_penalty'],'seed':0,'maxTokens':768,'prompt':selected['prompt'],'modelSelector':args.model},
           'network':'Downloaded public weights once, then Python external sockets blocked; independent localhost model server. No personal AI or paid inference API.',
           'websiteConnected':False,'publicationCapability':False,'cases':[]}
     save(data,path)

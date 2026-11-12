@@ -704,5 +704,24 @@
         "ta": 128089
       }
     }
+  },
+  "qwen3827b": {
+    "model": "Qwen/Qwen3.8-27B",
+    "repository": "unsloth/Qwen3.8-27B-GGUF",
+    "revision": "4af51b3542f775b0a8e4b310bfb3f17e01c306c9",
+    "file": "Qwen3.8-27B-UD-IQ3_XXS.gguf",
+    "bytes": 10934860704,
+    "sha256": "c0b7c3038681ed2e3040456c1dd45f9858b6c2290bed172c70388a94874f3eee",
+    "license": "apache-2.0",
+    "quantizationSource": "Unsloth community GGUF, official Qwen3.8 base; no tensor parity claim",
+    "threads": 4,
+    "top_p": 0.8,
+    "temperature": 0.7,
+    "repeat_penalty": 1.0,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "promptKind": "qwen3",
+    "firstTokenId": 248045,
+    "prompt": "New Qwen3.8-27B, Unsloth UD-IQ3_XXS3bit community GGUF10.93GB. Canonical official/embedded nonthinking templates checked on all180 prompts, native tokenizer firstID248045 checked from metadata-only surrogate. Official nonthinking sampling temperature0.7/top_p0.8/top_k20/min_p0/presence_penalty1.5/repetition1. Whole source, no glossary/rewrite/splitting/post-edit. Actual16GB Windows runtime/RAM/speed/quality pending, not inferred from file size."
   }
 }
