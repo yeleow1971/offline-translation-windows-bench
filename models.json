@@ -791,5 +791,30 @@
     "firstTokenId": 151644,
     "licenseNotes": "Base author and community metadata Apache2.0. Tamil absent from author continued-pretraining language list; tested only Chinese/Malaysian Malay under owner-approved optional Tamil fallback.",
     "prompt": "New regional8B Q8_0 model; exact author/embedded template to be verified on frozen60 source prompts; greedy research sampling temp0/top_p1/top_k20/min_p0/repeat1/presence0, not an author-recommended quality claim. Original entire English text and generic salon context, no glossary/rewriting/segmentation/output editing. Actual16GB Windows load/speed/semantic review required. Chinese/Malaysian Malay only; Tamil absent from author language list and optional under current evaluation scope."
+  },
+  "qwensea8b": {
+    "model": "aisingapore/Qwen-SEA-LION-v4-8B-VL",
+    "repository": "mradermacher/Qwen-SEA-LION-v4-8B-VL-GGUF",
+    "revision": "1e199f48f6a679982a1901dbd7d817dcab77a31a",
+    "file": "Qwen-SEA-LION-v4-8B-VL.Q8_0.gguf",
+    "bytes": 8709520480,
+    "sha256": "32ec27dd758df608d66386cb0db374575a7fa9e54c85a1ab13dabaaa03f07f01",
+    "license": "mit",
+    "quantizationSource": "mradermacher community static Q8_0 from AI Singapore Qwen3-VL8B regional checkpoint, original profile; no tensor parity claim",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0.0,
+    "repeat_penalty": 1.0,
+    "top_k": 20,
+    "presence_penalty": 0.0,
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "ta"
+    ],
+    "promptKind": "qwen2",
+    "firstTokenId": 151644,
+    "licenseNotes": "Author and community MIT metadata; underlying Qwen3-VL Apache2.0. No model gate/account or personal inference API.",
+    "prompt": "New AI Singapore regional Qwen3-VL8B instruction checkpoint, distinct from earlier general Qwen3.8. Community staticQ8_0, exact author/embedded text-only ChatML prompt180-source parity and native firstID151644 verified locally without full-weight inference. Greedy research temp0/top_p1/top_k20/min_p0/repeat1/presence0; not an author-default recommendation. All3 target languages, same60 frozen original sources and generic salon context. No vision input/projector, tools, glossary/rewriting/segmentation/grammar/output edits. Actual16GB Windows runtime and per-language quality must be measured; optional Tamil does not waive Chinese/Malay."
   }
 }
