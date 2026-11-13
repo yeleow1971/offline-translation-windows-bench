@@ -112,6 +112,8 @@ def round2_messages(text,language,kind):
 
 def round2_prompt(text,language,kind):
     messages=round2_messages(text,language,kind)
+    if kind=='qwen2':return ''.join('<|im_start|>'+m['role']+'\n'+m['content']+'<|im_end|>\n' for m in messages)+'<|im_start|>assistant\n'
+    if kind=='apertus':return '<s><|system_start|>'+messages[0]['content']+'<|system_end|><|user_start|>'+messages[1]['content']+'<|user_end|><|assistant_start|>'
     if kind=='qwen3':return ''.join('<|im_start|>'+m['role']+'\n'+m['content']+'<|im_end|>\n' for m in messages)+'<|im_start|>assistant\n<think>\n\n</think>\n\n'
     if kind in ['gemma4','gemma4-12b']:
         raw='<bos>'+''.join('<|turn>'+m['role']+'\n'+m['content']+'<turn|>\n' for m in messages)+'<|turn>model\n'
@@ -487,7 +489,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b','qwen3827b-p0'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b','qwen3827b-p0','apertus8b','sailor8b'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -566,7 +568,7 @@ def main():
             row={**case,'translations':{}};data['cases'].append(row);save(data,path)
             for language in languages:
                 print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
-                if selected.get('promptKind') in ['qwen3','gemma4','gemma4-12b','agaram']:
+                if selected.get('promptKind') in ['qwen3','qwen2','apertus','gemma4','gemma4-12b','agaram']:
                     row['translations'][language]=translate_round2(request,case['text'],language)
                     save(data,path);print('  已保存：'+row['translations'][language]['text'],flush=True)
                     continue

@@ -742,5 +742,54 @@
     "promptKind": "qwen3",
     "firstTokenId": 248045,
     "prompt": "Controlled presence-penalty ablation against qwen3827b baseline: exact same GGUF revision/SHA, official nonthinking template, unchanged 60 frozen source cases, temperature0.7/top_p0.8/top_k20/min_p0/repetition1; ONLY presence_penalty1.5→0. Author warns high presence penalties can mix languages/decrease performance. This lower setting is experimental, not a claim to follow the default nonthinking recommendation. No glossary, source rewrite, splitting, grammar or output edits. Whole model SHA, input/payload hashes and returned sampling settings must be verified. Actual16GB cloud runtime and three-language quality remain tests; customer Windows installation/performance unverified."
+  },
+  "apertus8b": {
+    "model": "aisingapore/Apertus-SEA-LION-v4-8B-IT",
+    "repository": "aisingapore/Apertus-SEA-LION-v4-8B-IT-GGUF",
+    "revision": "86ae18e6d90fd18888a2663190b8493963e28e42",
+    "file": "Apertus-SEA-LION-v4-8B-IT-Q8_0.gguf",
+    "bytes": 8565371168,
+    "sha256": "ee21d717d04620b5338c96a76ae89ecec960dd9d2c71b3d87567538549fe6d8b",
+    "license": "mit",
+    "quantizationSource": "AI Singapore author Q8_0 GGUF; no full-precision tensor-parity claim",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0.0,
+    "repeat_penalty": 1.0,
+    "top_k": 20,
+    "presence_penalty": 0.0,
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "ta"
+    ],
+    "promptKind": "apertus",
+    "firstTokenId": 1,
+    "licenseNotes": "Author metadata MIT; model-card body Apache2.0, base Apertus Apache2.0. Both permissive notices recorded; preserve both at any later distribution.",
+    "prompt": "New regional8B Q8_0 model; exact author/embedded template to be verified on frozen60 source prompts; greedy research sampling temp0/top_p1/top_k20/min_p0/repeat1/presence0, not an author-recommended quality claim. Original entire English text and generic salon context, no glossary/rewriting/segmentation/output editing. Actual16GB Windows load/speed/semantic review required. Chinese/Malaysian Malay/Tamil evaluation."
+  },
+  "sailor8b": {
+    "model": "sail/Sailor2-8B-Chat",
+    "repository": "mradermacher/Sailor2-8B-Chat-GGUF",
+    "revision": "b77cd1b8ccd52d8c4d0a3f95140c3009d144896c",
+    "file": "Sailor2-8B-Chat.Q8_0.gguf",
+    "bytes": 9088183200,
+    "sha256": "342589fcae2103351fdedd214043aaa7979027370995f3ff23dc6be67ab61263",
+    "license": "apache-2.0",
+    "quantizationSource": "mradermacher community static Q8_0 GGUF; no full-precision tensor-parity claim",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0.0,
+    "repeat_penalty": 1.0,
+    "top_k": 20,
+    "presence_penalty": 0.0,
+    "targetLanguages": [
+      "zh",
+      "ms"
+    ],
+    "promptKind": "qwen2",
+    "firstTokenId": 151644,
+    "licenseNotes": "Base author and community metadata Apache2.0. Tamil absent from author continued-pretraining language list; tested only Chinese/Malaysian Malay under owner-approved optional Tamil fallback.",
+    "prompt": "New regional8B Q8_0 model; exact author/embedded template to be verified on frozen60 source prompts; greedy research sampling temp0/top_p1/top_k20/min_p0/repeat1/presence0, not an author-recommended quality claim. Original entire English text and generic salon context, no glossary/rewriting/segmentation/output editing. Actual16GB Windows load/speed/semantic review required. Chinese/Malaysian Malay only; Tamil absent from author language list and optional under current evaluation scope."
   }
 }
