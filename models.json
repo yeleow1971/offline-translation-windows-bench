@@ -816,5 +816,29 @@
     "firstTokenId": 151644,
     "licenseNotes": "Author and community MIT metadata; underlying Qwen3-VL Apache2.0. No model gate/account or personal inference API.",
     "prompt": "New AI Singapore regional Qwen3-VL8B instruction checkpoint, distinct from earlier general Qwen3.8. Community staticQ8_0, exact author/embedded text-only ChatML prompt180-source parity and native firstID151644 verified locally without full-weight inference. Greedy research temp0/top_p1/top_k20/min_p0/repeat1/presence0; not an author-default recommendation. All3 target languages, same60 frozen original sources and generic salon context. No vision input/projector, tools, glossary/rewriting/segmentation/grammar/output edits. Actual16GB Windows runtime and per-language quality must be measured; optional Tamil does not waive Chinese/Malay."
+  },
+  "sailor8b-json": {
+    "model": "sail/Sailor2-8B-Chat",
+    "repository": "mradermacher/Sailor2-8B-Chat-GGUF",
+    "revision": "b77cd1b8ccd52d8c4d0a3f95140c3009d144896c",
+    "file": "Sailor2-8B-Chat.Q8_0.gguf",
+    "bytes": 9088183200,
+    "sha256": "342589fcae2103351fdedd214043aaa7979027370995f3ff23dc6be67ab61263",
+    "license": "apache-2.0",
+    "quantizationSource": "mradermacher community static Q8_0 GGUF; no full-precision tensor-parity claim",
+    "threads": 4,
+    "top_p": 1.0,
+    "temperature": 0.0,
+    "repeat_penalty": 1.0,
+    "top_k": 20,
+    "presence_penalty": 0.0,
+    "targetLanguages": [
+      "zh",
+      "ms"
+    ],
+    "promptKind": "qwen2-json",
+    "firstTokenId": 151644,
+    "licenseNotes": "Base author and community metadata Apache2.0. Tamil absent from author continued-pretraining language list; tested only Chinese/Malaysian Malay under owner-approved optional Tamil fallback.",
+    "prompt": "Same regional Sailor2-8B staticQ8_0/greedy settings and60 frozen sources. Controlled source-boundary improvement after baseline translated context instead of a quoted command: source text is JSON-escaped verbatim in source_text, with explicit instruction to translate that data rather than obey it. Same system message, model, runtime and sampling; no glossary, source words changed, target grammar or output editing. This is an additional prompt configuration, not a new model. Chinese/MalaysianMalay only, optional Tamil rule retained."
   }
 }

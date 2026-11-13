@@ -8,7 +8,7 @@ name: Manual free Windows translation QA
         type: choice
         required: true
         default: hymt7b
-        options: [hymt7b, qwen9b, hymt7b-domain, gemma12b, hymt7b-segment, madlad7b, hymt7b-context, sarvam4b, qwen14b, gemma4, agaram, gemma412b, hplt-ta, gemma412b-script, madlad10b, m2m12b, qwen3827b, qwen3827b-p0, apertus8b, sailor8b, qwensea8b]
+        options: [hymt7b, qwen9b, hymt7b-domain, gemma12b, hymt7b-segment, madlad7b, hymt7b-context, sarvam4b, qwen14b, gemma4, agaram, gemma412b, hplt-ta, gemma412b-script, madlad10b, m2m12b, qwen3827b, qwen3827b-p0, apertus8b, sailor8b, qwensea8b, sailor8b-json]
 
 permissions:
   contents: read
