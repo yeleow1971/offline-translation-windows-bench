@@ -406,5 +406,33 @@
     "task": "summary",
     "text": "MAKER A announced a new hair dryer. The manufacturer says it may reduce drying time. No independent test result or exact time reduction is provided.",
     "writingOnly": true
+  },
+  {
+    "id": "writing-price-holdout",
+    "task": "write",
+    "text": "CEDAR STUDIO offers a haircut for RM60. A wash is not included. No special offer is available.",
+    "writingOnly": true,
+    "holdout": true
+  },
+  {
+    "id": "writing-product-holdout",
+    "task": "rewrite",
+    "text": "BRIGHT SERUM instructions say to use 1 pump on damp hair lengths. Do not rinse it out. Do not apply it to the scalp.",
+    "writingOnly": true,
+    "holdout": true
+  },
+  {
+    "id": "writing-location-holdout",
+    "task": "summary",
+    "text": "EMBER COLOR is available only at River Point. It is not available at Garden Lane. A consultation is required and no price is listed.",
+    "writingOnly": true,
+    "holdout": true
+  },
+  {
+    "id": "writing-booking-holdout",
+    "task": "write",
+    "text": "A booking request at NOVA STUDIO is not a confirmed appointment. The branch must contact the visitor before confirming the time. The website does not show live availability.",
+    "writingOnly": true,
+    "holdout": true
   }
 ]
