@@ -1069,5 +1069,30 @@
     "promptVersion": 3,
     "sourceSet": "all",
     "promptKind": "gemma3"
+  },
+  "qwenwritenative": {
+    "model": "Qwen/Qwen3.5-9B",
+    "repository": "unsloth/Qwen3.5-9B-GGUF",
+    "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+    "file": "Qwen3.5-9B-Q4_K_M.gguf",
+    "bytes": 5680522464,
+    "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+    "license": "Apache-2.0",
+    "quantizationSource": "Unsloth community GGUF, base Qwen official",
+    "top_p": 0.8,
+    "repeat_penalty": 1,
+    "prompt": "Unchanged v3 payload/sampling; six new original Chinese/Malay facts rewritten in the same language only. Cross-language/full-news translation remain rejected and out of this release scope.",
+    "taskKind": "writing",
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "en"
+    ],
+    "context": 4096,
+    "threads": 4,
+    "temperature": 0.7,
+    "promptVersion": 3,
+    "sourceSet": "native",
+    "sameLanguageOnly": true
   }
 }

@@ -482,5 +482,59 @@
     "writingOnly": true,
     "holdout": true,
     "sourceSet": "mixed"
+  },
+  {
+    "id": "writing-native-zh-hours",
+    "sourceLanguage": "zh",
+    "task": "write",
+    "text": "PINE STUDIO 仅在 2026 年 12 月 9 日休息。其他日期营业时间不变。这不是永久停业。",
+    "writingOnly": true,
+    "sourceSet": "native",
+    "holdout": true
+  },
+  {
+    "id": "writing-native-zh-scalp",
+    "sourceLanguage": "zh",
+    "task": "summary",
+    "text": "MOSS STUDIO 提供头皮护理咨询。这不是医疗治疗，不承诺生发效果。没有列出价格。",
+    "writingOnly": true,
+    "sourceSet": "native",
+    "holdout": true
+  },
+  {
+    "id": "writing-native-zh-feedback",
+    "sourceLanguage": "zh",
+    "task": "rewrite",
+    "text": "一位虚构顾客在 BIRCH STUDIO 等待了 17 分钟，没有被强迫购买产品，但发型没有达到要求。请保留这项不满意，不可改成赞美。",
+    "writingOnly": true,
+    "sourceSet": "native",
+    "holdout": true
+  },
+  {
+    "id": "writing-native-ms-hours",
+    "sourceLanguage": "ms",
+    "task": "write",
+    "text": "PINE STUDIO tutup pada 9 Disember 2026 sahaja. Waktu operasi pada hari lain tidak berubah. Penutupan ini bukan penutupan kekal.",
+    "writingOnly": true,
+    "sourceSet": "native",
+    "holdout": true
+  },
+  {
+    "id": "writing-native-ms-scalp",
+    "sourceLanguage": "ms",
+    "task": "summary",
+    "text": "MOSS STUDIO menawarkan konsultasi penjagaan kulit kepala, bukan rawatan perubatan. Tiada janji pertumbuhan rambut. Harga belum disenaraikan.",
+    "writingOnly": true,
+    "sourceSet": "native",
+    "holdout": true
+  },
+  {
+    "id": "writing-native-ms-feedback",
+    "sourceLanguage": "ms",
+    "task": "rewrite",
+    "text": "Seorang pelanggan rekaan menunggu 17 minit di BIRCH STUDIO. Tiada paksaan membeli produk, tetapi gaya rambut tidak memenuhi permintaannya. Kekalkan aduan ini, jangan tukar menjadi pujian.",
+    "writingOnly": true,
+    "sourceSet": "native",
+    "holdout": true
   }
 ]

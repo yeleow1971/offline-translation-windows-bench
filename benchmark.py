@@ -492,7 +492,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b','qwen3827b-p0','apertus8b','sailor8b','qwensea8b','sailor8b-json','qwenwrite','qwenwrite35','qwenwrite9','sailorwrite','qwenwrite9mix','sailorwritemix','qwenwrite9v3','qwenwrite35v3','gemma3write'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b','qwen3827b-p0','apertus8b','sailor8b','qwensea8b','sailor8b-json','qwenwrite','qwenwrite35','qwenwrite9','sailorwrite','qwenwrite9mix','sailorwritemix','qwenwrite9v3','qwenwrite35v3','gemma3write','qwenwritenative'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -570,7 +570,7 @@ def main():
         data['unauthenticatedLocalRequestRejected']=True;save(data,path)
         for index,case in enumerate(cases,1):
             row={**case,'translations':{}};data['cases'].append(row);save(data,path)
-            for language in languages:
+            for language in ([case['sourceLanguage']] if selected.get('sameLanguageOnly') else languages):
                 print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
                 if selected.get('taskKind')=='writing':
                     job_input={'id':hashlib.sha256(case['id'].encode()).hexdigest()[:32],'language':language,'task':case['task'],'source':case['text']}
