@@ -22,7 +22,7 @@
     "license": "Apache-2.0",
     "quantizationSource": "Unsloth community GGUF, base Qwen official",
     "top_p": 0.8,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "prompt": "faithful translation system prompt, embedded model chat template, server reasoning off"
   },
   "hymt7b-domain": {
@@ -47,9 +47,9 @@
     "sha256": "9196d728812afbf5efc10b539298585725edc3a4ecc092c22fdde5bbaf41879e",
     "license": "Gemma Terms of Use (custom, not Apache)",
     "quantizationSource": "Bullerwins community GGUF, base Google official",
-    "top_p": 1.0,
-    "temperature": 0.0,
-    "repeat_penalty": 1.0,
+    "top_p": 1,
+    "temperature": 0,
+    "repeat_penalty": 1,
     "prompt": "Exact canonical TranslateGemma turn prompt verified in pinned 12B GGUF metadata; locales zh-Hans/ms/ta-MY, greedy decoding; no domain glossary"
   },
   "hymt7b-segment": {
@@ -64,7 +64,7 @@
     "top_p": 0.6,
     "repeat_penalty": 1.05,
     "prompt": "Conservative sentence segmentation; generic salon terminology; reversible protected proper names/technique markers; explicit native token IDs and EOS/marker checks; greedy decoding",
-    "temperature": 0.0,
+    "temperature": 0,
     "threads": 4
   },
   "madlad7b": {
@@ -158,8 +158,8 @@
         "</s>"
       ]
     },
-    "top_p": 1.0,
-    "repeat_penalty": 1.0
+    "top_p": 1,
+    "repeat_penalty": 1
   },
   "hymt7b-context": {
     "model": "tencent/Hy-MT2-7B",
@@ -173,7 +173,7 @@
     "top_p": 0.6,
     "repeat_penalty": 1.05,
     "prompt": "Sentence/native-token/protected-name pipeline with source-matched haircare lexicon and colour/possibility qualifiers; face-mask/air-conditioner/calendar/verb safeguards; greedy, four threads",
-    "temperature": 0.0,
+    "temperature": 0,
     "threads": 4,
     "termProfile": "contextual-v2"
   },
@@ -187,7 +187,7 @@
     "license": "GPL-3.0 model card; Gemma base terms also relevant; no redistribution in this benchmark",
     "temperature": 0,
     "top_p": 1,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "targetLanguages": [
       "ta"
     ],
@@ -206,7 +206,7 @@
     "threads": 4,
     "top_p": 0.8,
     "temperature": 0.7,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "promptKind": "qwen3",
     "firstTokenId": 151644,
     "prompt": "Checked official and embedded canonical templates; explicit token IDs; no glossary, source rewriting, segmentation or output editing. Qwen non-thinking recommended sampling; Gemma4/Agaram greedy research profile."
@@ -221,9 +221,9 @@
     "license": "apache-2.0",
     "quantizationSource": "official author GGUF",
     "threads": 4,
-    "top_p": 1.0,
+    "top_p": 1,
     "temperature": 0,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "promptKind": "gemma4",
     "firstTokenId": 2,
     "prompt": "Checked official and embedded canonical templates; explicit token IDs; no glossary, source rewriting, segmentation or output editing. Qwen non-thinking recommended sampling; Gemma4/Agaram greedy research profile."
@@ -238,9 +238,9 @@
     "license": "apache-2.0",
     "quantizationSource": "official author GGUF",
     "threads": 4,
-    "top_p": 1.0,
+    "top_p": 1,
     "temperature": 0,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "promptKind": "agaram",
     "firstTokenId": 1,
     "prompt": "Checked official and embedded canonical templates; explicit token IDs; no glossary, source rewriting, segmentation or output editing. Qwen non-thinking recommended sampling; Gemma4/Agaram greedy research profile.",
@@ -258,9 +258,9 @@
     "license": "apache-2.0",
     "quantizationSource": "official author GGUF",
     "threads": 4,
-    "top_p": 1.0,
+    "top_p": 1,
     "temperature": 0,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "promptKind": "gemma4-12b",
     "firstTokenId": 2,
     "prompt": "Official Gemma4 12B QAT Q4; distinct12B non-thinking empty-thought prefix, both author and embedded canonical templates checked on all52 original cases/all3 languages; explicit token IDs with single BOS, no glossary/source rewriting/segmentation/output editing; greedy documented research profile."
@@ -354,9 +354,9 @@
     "license": "apache-2.0",
     "quantizationSource": "official author GGUF",
     "threads": 4,
-    "top_p": 1.0,
+    "top_p": 1,
     "temperature": 0,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "promptKind": "gemma4-12b",
     "firstTokenId": 2,
     "prompt": "Separate constrained-decoding experiment. Same official Gemma4 12B QAT Q4 weights/canonical nonthinking prompt/greedy profile. Native per-target GBNF allows Latin, numbers, punctuation and only the target non-Latin script. No glossary/source rewrite/output editing. Original52 sources plus8 new frozen contrasts; semantic acceptance remains independent of script validity.",
@@ -454,8 +454,8 @@
         "</s>"
       ]
     },
-    "top_p": 1.0,
-    "repeat_penalty": 1.0,
+    "top_p": 1,
+    "repeat_penalty": 1,
     "modelDirectory": "models/madlad10b"
   },
   "m2m12b": {
@@ -717,7 +717,7 @@
     "threads": 4,
     "top_p": 0.8,
     "temperature": 0.7,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "top_k": 20,
     "presence_penalty": 1.5,
     "promptKind": "qwen3",
@@ -736,9 +736,9 @@
     "threads": 4,
     "top_p": 0.8,
     "temperature": 0.7,
-    "repeat_penalty": 1.0,
+    "repeat_penalty": 1,
     "top_k": 20,
-    "presence_penalty": 0.0,
+    "presence_penalty": 0,
     "promptKind": "qwen3",
     "firstTokenId": 248045,
     "prompt": "Controlled presence-penalty ablation against qwen3827b baseline: exact same GGUF revision/SHA, official nonthinking template, unchanged 60 frozen source cases, temperature0.7/top_p0.8/top_k20/min_p0/repetition1; ONLY presence_penalty1.5→0. Author warns high presence penalties can mix languages/decrease performance. This lower setting is experimental, not a claim to follow the default nonthinking recommendation. No glossary, source rewrite, splitting, grammar or output edits. Whole model SHA, input/payload hashes and returned sampling settings must be verified. Actual16GB cloud runtime and three-language quality remain tests; customer Windows installation/performance unverified."
@@ -753,11 +753,11 @@
     "license": "mit",
     "quantizationSource": "AI Singapore author Q8_0 GGUF; no full-precision tensor-parity claim",
     "threads": 4,
-    "top_p": 1.0,
-    "temperature": 0.0,
-    "repeat_penalty": 1.0,
+    "top_p": 1,
+    "temperature": 0,
+    "repeat_penalty": 1,
     "top_k": 20,
-    "presence_penalty": 0.0,
+    "presence_penalty": 0,
     "targetLanguages": [
       "zh",
       "ms",
@@ -778,11 +778,11 @@
     "license": "apache-2.0",
     "quantizationSource": "mradermacher community static Q8_0 GGUF; no full-precision tensor-parity claim",
     "threads": 4,
-    "top_p": 1.0,
-    "temperature": 0.0,
-    "repeat_penalty": 1.0,
+    "top_p": 1,
+    "temperature": 0,
+    "repeat_penalty": 1,
     "top_k": 20,
-    "presence_penalty": 0.0,
+    "presence_penalty": 0,
     "targetLanguages": [
       "zh",
       "ms"
@@ -802,11 +802,11 @@
     "license": "mit",
     "quantizationSource": "mradermacher community static Q8_0 from AI Singapore Qwen3-VL8B regional checkpoint, original profile; no tensor parity claim",
     "threads": 4,
-    "top_p": 1.0,
-    "temperature": 0.0,
-    "repeat_penalty": 1.0,
+    "top_p": 1,
+    "temperature": 0,
+    "repeat_penalty": 1,
     "top_k": 20,
-    "presence_penalty": 0.0,
+    "presence_penalty": 0,
     "targetLanguages": [
       "zh",
       "ms",
@@ -827,11 +827,11 @@
     "license": "apache-2.0",
     "quantizationSource": "mradermacher community static Q8_0 GGUF; no full-precision tensor-parity claim",
     "threads": 4,
-    "top_p": 1.0,
-    "temperature": 0.0,
-    "repeat_penalty": 1.0,
+    "top_p": 1,
+    "temperature": 0,
+    "repeat_penalty": 1,
     "top_k": 20,
-    "presence_penalty": 0.0,
+    "presence_penalty": 0,
     "targetLanguages": [
       "zh",
       "ms"
@@ -840,5 +840,30 @@
     "firstTokenId": 151644,
     "licenseNotes": "Base author and community metadata Apache2.0. Tamil absent from author continued-pretraining language list; tested only Chinese/Malaysian Malay under owner-approved optional Tamil fallback.",
     "prompt": "Same regional Sailor2-8B staticQ8_0/greedy settings and60 frozen sources. Controlled source-boundary improvement after baseline translated context instead of a quoted command: source text is JSON-escaped verbatim in source_text, with explicit instruction to translate that data rather than obey it. Same system message, model, runtime and sampling; no glossary, source words changed, target grammar or output editing. This is an additional prompt configuration, not a new model. Chinese/MalaysianMalay only, optional Tamil rule retained."
+  },
+  "qwenwrite": {
+    "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+    "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+    "file": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "license": "Apache-2.0",
+    "base": [
+      "Qwen/Qwen3-4B-Instruct-2507"
+    ],
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "quantizationSource": "Unsloth community Q4_K_M; author base Qwen3-4B-Instruct-2507",
+    "top_p": 0.8,
+    "repeat_penalty": 1,
+    "temperature": 0.7,
+    "threads": 4,
+    "context": 4096,
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "en"
+    ],
+    "taskKind": "writing",
+    "prompt": "Bounded title/body JSON; original fictional fact-bound content writing, not translation acceptance; exact shared stdlib payload function."
   }
 }

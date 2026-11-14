@@ -162,3 +162,6 @@ Sources: https://huggingface.co/aisingapore/Apertus-SEA-LION-v4-8B-IT ; https://
 
 
 `sailor8b-json` is one controlled prompt-boundary improvement of the same Sailor2 model, not another model: unchanged system/model/greedy sampling/source60 cases, but original source text is serialized verbatim as JSON source_text with an explicit translate-data instruction. This addresses the observed baseline context/instruction confusion. It does not substitute any source words, provide gold translations/glossary, execute source commands or post-edit output. All120 canonical official/embedded prompts and native firstID checked locally; all actual required-language meanings still require cloud evaluation. Same baseline free lane, after baseline stopped, alongside at most one other job; fixed75minute public/manual Windows, no secrets/private code/paid or personal inference.
+
+
+2026-11-14: qwenwrite is a separate short-content-writing experiment on8 original fictional fact sets in EN/ZH/MS. The earlier translation sources/results remain unchanged; writing completion or JSON validity does not establish translation accuracy or semantic approval. No website/client code, data, account keys or publication ability is included.
