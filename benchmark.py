@@ -515,6 +515,7 @@ def main():
     languages=args.languages.split(',')
     if not languages or not set(languages)<=set(LANGUAGES):raise ValueError('Invalid language selection')
     cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
+    cases=[c for c in cases if bool(c.get('writingOnly')) == (selected.get('taskKind')=='writing')]
     if args.limit:cases=cases[:args.limit]
     model=Path(args.model_file).resolve() if args.model_file else root/'models'/MODEL
     get_model(model)
