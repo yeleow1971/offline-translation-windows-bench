@@ -1050,7 +1050,7 @@
     "sha256": "04a43a22e8d2003deda5acc262f68ec1005fa76c735a9962a8c77042a74a7d19",
     "license": "gemma",
     "base": [
-      "Qwen/Qwen3.5-4B"
+      "google/gemma-3-4b-it"
     ],
     "model": "google/gemma-3-4b-it",
     "quantizationSource": "Unsloth community Q4_K_M; Google Gemma terms apply, not Apache2.0.",
