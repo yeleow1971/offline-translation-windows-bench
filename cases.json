@@ -434,5 +434,53 @@
     "text": "A booking request at NOVA STUDIO is not a confirmed appointment. The branch must contact the visitor before confirming the time. The website does not show live availability.",
     "writingOnly": true,
     "holdout": true
+  },
+  {
+    "id": "writing-zh-price",
+    "task": "write",
+    "text": "CEDAR STUDIO 剪发价格是 RM60，不包括洗发，也没有优惠活动。",
+    "writingOnly": true,
+    "holdout": true,
+    "sourceSet": "mixed"
+  },
+  {
+    "id": "writing-zh-product",
+    "task": "rewrite",
+    "text": "BRIGHT SERUM 每次使用 1 泵，涂在微湿的头发长度部分，不只涂发尾。无需冲洗，不可涂在头皮。",
+    "writingOnly": true,
+    "holdout": true,
+    "sourceSet": "mixed"
+  },
+  {
+    "id": "writing-zh-booking",
+    "task": "summary",
+    "text": "NOVA STUDIO 的网上预约只是申请，尚未确认。分店必须联系顾客后才确认时间。网站不显示实时空位。",
+    "writingOnly": true,
+    "holdout": true,
+    "sourceSet": "mixed"
+  },
+  {
+    "id": "writing-ms-location",
+    "task": "write",
+    "text": "EMBER COLOR hanya ditawarkan di River Point, bukan di Garden Lane. Konsultasi diperlukan. Harga belum disenaraikan.",
+    "writingOnly": true,
+    "holdout": true,
+    "sourceSet": "mixed"
+  },
+  {
+    "id": "writing-ms-product",
+    "task": "rewrite",
+    "text": "VERDE MASK ialah perapi rambut yang perlu dibilas. Sapukan pada bahagian panjang rambut selama 3 minit, kemudian bilas. Jangan sapukan pada kulit kepala.",
+    "writingOnly": true,
+    "holdout": true,
+    "sourceSet": "mixed"
+  },
+  {
+    "id": "writing-ms-news",
+    "task": "summary",
+    "text": "MAKER A memperkenalkan pengering rambut baharu. Pengilang mendakwa alat itu mungkin memendekkan masa pengeringan. Tiada keputusan ujian bebas atau pengurangan masa yang tepat diberikan.",
+    "writingOnly": true,
+    "holdout": true,
+    "sourceSet": "mixed"
   }
 ]

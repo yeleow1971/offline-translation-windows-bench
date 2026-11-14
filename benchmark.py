@@ -389,7 +389,7 @@ def run_ct2(args):
     languages=args.languages.split(',')
     if not languages or not set(languages)<=set(LANGUAGES):raise ValueError('Invalid languages')
     cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
-    cases=[c for c in cases if bool(c.get('writingOnly')) == (selected.get('taskKind')=='writing')]
+    cases=[c for c in cases if bool(c.get('writingOnly')) == (selected.get('taskKind')=='writing') and c.get('sourceSet','base')==selected.get('sourceSet','base')]
     if args.limit:cases=cases[:args.limit]
     name=args.output_name or 'local-madlad7b'
     if Path(name).name!=name:raise ValueError('Invalid output name')
@@ -492,7 +492,7 @@ def self_check():
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--self-check',action='store_true')
-    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b','qwen3827b-p0','apertus8b','sailor8b','qwensea8b','sailor8b-json','qwenwrite','qwenwrite35','qwenwrite9','sailorwrite'],default='hymt7b')
+    parser.add_argument('--model',choices=['hymt7b','qwen9b','hymt7b-domain','gemma12b','hymt7b-segment','madlad7b','hymt7b-context','sarvam4b','qwen14b','gemma4','agaram','gemma412b','hplt-ta','gemma412b-script','madlad10b','m2m12b','qwen3827b','qwen3827b-p0','apertus8b','sailor8b','qwensea8b','sailor8b-json','qwenwrite','qwenwrite35','qwenwrite9','sailorwrite','qwenwrite9mix','sailorwritemix'],default='hymt7b')
     parser.add_argument('--allow-smaller-ram',action='store_true',help='Developer comparison only; recorded as actual smaller RAM.')
     parser.add_argument('--model-file')
     parser.add_argument('--limit',type=int,default=0)
@@ -515,7 +515,7 @@ def main():
     languages=args.languages.split(',')
     if not languages or not set(languages)<=set(LANGUAGES):raise ValueError('Invalid language selection')
     cases=json.loads((root/'cases.json').read_text(encoding='utf-8'))
-    cases=[c for c in cases if bool(c.get('writingOnly')) == (selected.get('taskKind')=='writing')]
+    cases=[c for c in cases if bool(c.get('writingOnly')) == (selected.get('taskKind')=='writing') and c.get('sourceSet','base')==selected.get('sourceSet','base')]
     if args.limit:cases=cases[:args.limit]
     model=Path(args.model_file).resolve() if args.model_file else root/'models'/MODEL
     get_model(model)
@@ -574,7 +574,7 @@ def main():
                 print(f'[{index}/{len(cases)}] {case["id"]} → {language}',flush=True)
                 if selected.get('taskKind')=='writing':
                     job_input={'id':hashlib.sha256(case['id'].encode()).hexdigest()[:32],'language':language,'task':case['task'],'source':case['text']}
-                    payload=payload_for(job_input);begin=time.monotonic()
+                    payload=payload_for(job_input);payload['model']=selected['model'];begin=time.monotonic()
                     response=request('/v1/chat/completions',payload)
                     choice=response['choices'][0];text=choice['message'].get('content') or ''
                     try:checked=validate_result(json.loads(text),case['text']);validation={'valid':True,**checked}

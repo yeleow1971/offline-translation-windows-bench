@@ -165,3 +165,6 @@ Sources: https://huggingface.co/aisingapore/Apertus-SEA-LION-v4-8B-IT ; https://
 
 
 2026-11-14: qwenwrite is a separate short-content-writing experiment on8 original fictional fact sets in EN/ZH/MS. The earlier translation sources/results remain unchanged; writing completion or JSON validity does not establish translation accuracy or semantic approval. No website/client code, data, account keys or publication ability is included.
+
+2026-11-14: qwenwrite9mix and sailorwritemix use six additional original Chinese/Malay source facts with EN/ZH/MS outputs, the frozen v2 writing prompt and identical sampling. Base12 and mixed6 remain separate sets. These are new-input holdouts, no gold output or private website code. The model field now reports the selected checkpoint; actual pinned weight metadata remains authoritative for previous runs. Same two free standard Windows lanes and eight public files.
+
