@@ -1094,5 +1094,34 @@
     "promptVersion": 3,
     "sourceSet": "native",
     "sameLanguageOnly": true
+  },
+  "qwenwriterclient": {
+    "model": "Qwen/Qwen3.5-9B",
+    "repository": "unsloth/Qwen3.5-9B-GGUF",
+    "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+    "file": "Qwen3.5-9B-Q4_K_M.gguf",
+    "bytes": 5680522464,
+    "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+    "license": "Apache-2.0",
+    "quantizationSource": "Unsloth community GGUF, base Qwen official",
+    "top_p": 0.8,
+    "repeat_penalty": 1,
+    "prompt": "Smoke test the already-public customer companion package on actual16GB Windows: embedded Python, local HTTP boundaries, real model and3 original same-language facts, then owned-child cleanup. No private website source/auth/customer data or website API writes.",
+    "taskKind": "writing",
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "en"
+    ],
+    "context": 4096,
+    "threads": 4,
+    "temperature": 0.7,
+    "promptVersion": 3,
+    "sourceSet": "all",
+    "clientPackage": {
+      "url": "https://ihdgroup.my/assets/IHD-Offline-Writer-Windows.zip",
+      "bytes": 49233,
+      "sha256": "c580229f50c74cb917c2c0246368d7a9b5d0da4a3046124f4eecfbcd0b3c5111"
+    }
   }
 }
