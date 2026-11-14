@@ -890,5 +890,54 @@
     ],
     "taskKind": "writing",
     "prompt": "Shared fact-bound short-writing contract v2 with generic salon glossary;12 sources including4 new holdouts; not translation acceptance."
+  },
+  "qwenwrite9": {
+    "model": "Qwen/Qwen3.5-9B",
+    "repository": "unsloth/Qwen3.5-9B-GGUF",
+    "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+    "file": "Qwen3.5-9B-Q4_K_M.gguf",
+    "bytes": 5680522464,
+    "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+    "license": "Apache-2.0",
+    "quantizationSource": "Unsloth community GGUF, base Qwen official",
+    "top_p": 0.8,
+    "repeat_penalty": 1,
+    "prompt": "Identical fact-bound short-writing v2 contract on frozen12 fictional fact sets; compare a larger free offline model after4B semantic rejection.",
+    "taskKind": "writing",
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "en"
+    ],
+    "context": 4096,
+    "threads": 4,
+    "temperature": 0.7
+  },
+  "sailorwrite": {
+    "model": "sail/Sailor2-8B-Chat",
+    "repository": "mradermacher/Sailor2-8B-Chat-GGUF",
+    "revision": "b77cd1b8ccd52d8c4d0a3f95140c3009d144896c",
+    "file": "Sailor2-8B-Chat.Q8_0.gguf",
+    "bytes": 9088183200,
+    "sha256": "342589fcae2103351fdedd214043aaa7979027370995f3ff23dc6be67ab61263",
+    "license": "apache-2.0",
+    "quantizationSource": "mradermacher community static Q8_0 GGUF; no full-precision tensor-parity claim",
+    "threads": 4,
+    "top_p": 0.8,
+    "temperature": 0.7,
+    "repeat_penalty": 1,
+    "top_k": 20,
+    "presence_penalty": 0,
+    "targetLanguages": [
+      "zh",
+      "ms",
+      "en"
+    ],
+    "promptKind": "qwen2",
+    "firstTokenId": 151644,
+    "licenseNotes": "Base author and community metadata Apache2.0. Tamil absent from author continued-pretraining language list; tested only Chinese/Malaysian Malay under owner-approved optional Tamil fallback.",
+    "prompt": "Identical fact-bound short-writing v2 contract on frozen12 fictional fact sets; compare a larger free offline model after4B semantic rejection.",
+    "taskKind": "writing",
+    "context": 4096
   }
 }
